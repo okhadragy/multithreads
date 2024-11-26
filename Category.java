@@ -19,7 +19,7 @@ public class Category extends Entity {
         Table<Category> categoryList = db.get(admin, "categories");
 
         for (int i = 0; i < categoryList.getnumberOfElements(); i++) {
-            if(id == (categoryList[i]).id) {
+            if(id == (categoryList.get(i)).id) {
                 throw new AlreadyExists("Category ID already exists");
             }    
         }

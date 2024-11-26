@@ -16,6 +16,7 @@ enum Role {
 }
 
 public class Admin extends User {
+
     private Role role;
     private int workingHours;
 
@@ -30,19 +31,19 @@ public class Admin extends User {
     }
 
     public void create(Entity e, Database db){
-        // DB OPERATION TO CREATE
+        e.save(db, this);
     }
 
-    public void get(int index, String tableName, Database db){
-        // DB OPERATION this uses the get method in db
+    public Entity get(int index, String tableName, Database db){
+        return (db.get(this, tableName)).get(index);
     }
 
     public void update(int index, Entity e, String tableName, Database db){
-        // update 
+        (db.get(this, tableName)).update(index, e);
     }
 
     public void delete(Entity e, Database db){
-        // delete entity from DB
+        e.delete(db, this);
     }
 
 }

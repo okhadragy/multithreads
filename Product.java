@@ -28,7 +28,7 @@ public class Product extends Entity implements Comparable<Product> {
         Table<Product> productList = db.get(admin, "products");
 
         for (int i = 0; i < productList.getnumberOfElements(); i++) {
-            if(id == (productList[i]).id) {
+            if(id == (productList.get(i)).id) {
                 throw new AlreadyExists("Product ID already exists");
             }    
         }

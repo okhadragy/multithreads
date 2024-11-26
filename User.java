@@ -15,7 +15,7 @@ public abstract class User extends Entity {
         Table<User> userList = db.get(admin, "users");
 
         for (int i = 0; i < userList.getnumberOfElements(); i++) {
-            if(username.equals((userList[i]).username)) {
+            if(username.equals((userList.get(i)).username)) {
                 throw new AlreadyExists("Username already exists");
             }
         }
