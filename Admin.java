@@ -62,4 +62,12 @@ public class Admin extends User {
         e.delete(db, this);
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public int getWorkingHours() {
+        return workingHours;
+    }
+
 }

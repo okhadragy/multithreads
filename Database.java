@@ -8,13 +8,25 @@ public class Database {
     {
         if (admin.isSaved()) {
             if (tableName.toLowerCase()=="users") {
-                return users;
+                if (admin.getRole()==Role.superadmin || admin.getRole()==Role.customer) {
+                    return users;
+                }
+                throw new RuntimeException("You don't have the permission to access this data");
             }else if(tableName.toLowerCase()=="products"){
-                return products;
+                if (admin.getRole()==Role.superadmin || admin.getRole()==Role.product) {
+                    return products;
+                }
+                throw new RuntimeException("You don't have the permission to access this data");
             }else if(tableName.toLowerCase()=="orders"){
-                return orders;
+                if (admin.getRole()==Role.superadmin || admin.getRole()==Role.order) {
+                    return orders;
+                }
+                throw new RuntimeException("You don't have the permission to access this data");
             }else if(tableName.toLowerCase()=="categories"){
-                return categories;
+                if (admin.getRole()==Role.superadmin || admin.getRole()==Role.product) {
+                    return categories;
+                }
+                throw new RuntimeException("You don't have the permission to access this data");
             }
             throw new RuntimeException("this Table does not exist");
         }
