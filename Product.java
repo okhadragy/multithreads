@@ -11,6 +11,8 @@ class AlreadySaved extends RuntimeException {
 }
 
 public class Product extends Entity implements Comparable<Product> {
+    private static int idCounter = 1;
+
     private int id;
     private String name;
     private String description;
@@ -18,7 +20,26 @@ public class Product extends Entity implements Comparable<Product> {
     private Category category;
     private int quantity;
 
-    // CONSTURCTORS
+    // Default quantity is 1
+
+    Product(String name, String desc, double price, Category category){
+        this.id = idCounter++;
+        this.name = name;
+        this.description = desc;
+        this.price = price;
+        this.category = category;
+        this.quantity = 1;
+    }
+
+    Product(String name, String desc, double price, Category category, int quantity){
+        this.id = idCounter++;
+        this.name = name;
+        this.description = desc;
+        this.price = price;
+        this.category = category;
+        this.quantity = quantity;
+    }
+
 
     public int getId(){
         return id;

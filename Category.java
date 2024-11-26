@@ -1,10 +1,37 @@
 public class Category extends Entity {
+    private static int idCounter = 1;
+
     private int id;
     private String name;
     private String description;
     private Table products;
 
-    // CONSTRUCTORS
+    public Category(){
+        this.id = idCounter++;
+        this.name = "nullcategory";
+        this.description = "nulldesc";
+
+        this.products = new Table();
+    }
+
+    public Category(String name, String description){
+        this.id = idCounter++;
+        this.name = name;
+        this.description = description;
+
+        this.products = new Table();
+    }
+
+    public Category(String name, String description, Table products){
+        this.id = idCounter++;
+        this.name = name;
+        this.description = description;
+
+        this.products = new Table();
+        for(int i = 0; i < products.getnumberOfElements(); i++){
+            (this.products).add(products.get(i));
+        }
+    }
 
     @Override
     public String toString() {

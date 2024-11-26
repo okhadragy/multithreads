@@ -20,10 +20,26 @@ public class Admin extends User {
     private Role role;
     private int workingHours;
 
-    // CONSTRUCTORS
-    // Admin()
-    // Admin(username: String, password: String)
-    // Admin(username: String, password: String, role: Role, workingHours: int)
+    // Default role is super-admin
+    // Default working hours is 0
+
+    public Admin(){
+        super();
+        this.role = Role.superadmin;
+        this.workingHours = 0;
+    }
+
+    public Admin(String username, String password){
+        super(username, password);
+        this.role = Role.superadmin;
+        this.workingHours = 0;
+    }
+
+    public Admin(String username, String password, Role role, int workingHours){
+        super(username, password);
+        this.role = role;
+        this.workingHours = workingHours;
+    }
 
     @Override
     public String toString() {

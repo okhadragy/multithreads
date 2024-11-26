@@ -3,9 +3,25 @@ public abstract class User extends Entity {
     protected String password;
     protected java.util.Date dateOfBirth;
 
-    // CONSTURCTORS +User()
-    // and +User(username: String, password: String)
-    // and +User(username: String, password: String, date: java.util.Date)
+    // Default username and password are "default"
+
+    public User(){
+        this.username = "default";
+        this.password = "default";
+        this.dateOfBirth = new java.util.Date();
+    }
+
+    public User(String username, String password){
+        this.username = username;
+        this.password = password;
+        this.dateOfBirth = new java.util.Date();
+    }
+
+    public User(String username, String password, java.util.Date date){
+        this.username = username;
+        this.password = password;
+        this.dateOfBirth = new java.util.Date(date.getTime());
+    }
 
     public String getUsername() {
         return username;

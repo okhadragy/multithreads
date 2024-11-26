@@ -1,7 +1,9 @@
 public abstract class Entity {
     private Boolean saved;
 
-    // CONSTURCTORS WHICH SET SAVED TO FALSE BY DEFAULT
+    public Entity(){
+        saved = false;
+    }
 
     public boolean isSaved(){
         return saved;
