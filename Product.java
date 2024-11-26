@@ -46,10 +46,10 @@ public class Product extends Entity implements Comparable<Product> {
     }
 
     public void setId(int id, Database db, Admin admin){
-        Table<Product> productList = db.get(admin, "products");
+        Table productList = db.get(admin, "products");
 
-        for (int i = 0; i < productList.getnumberOfElements(); i++) {
-            if(id == (productList.get(i)).id) {
+        for (int i = 0; i < productList.getNumberOfElements(); i++) {
+            if(id == ((Product)productList.get(i)).id) {
                 throw new AlreadyExists("Product ID already exists");
             }    
         }

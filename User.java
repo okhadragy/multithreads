@@ -28,10 +28,10 @@ public abstract class User extends Entity {
     }
 
     public void setUsername(String username, Database db, Admin admin) {
-        Table<User> userList = db.get(admin, "users");
+        Table userList = db.get(admin, "users");
 
-        for (int i = 0; i < userList.getnumberOfElements(); i++) {
-            if(username.equals((userList.get(i)).username)) {
+        for (int i = 0; i < userList.getNumberOfElements(); i++) {
+            if(username.equals(((User)userList.get(i)).username)) {
                 throw new AlreadyExists("Username already exists");
             }
         }

@@ -14,8 +14,12 @@ public abstract class Entity {
         (db.get(admin, tableName)).add(this);
     }
 
+    abstract public void save(Database db, Admin admin);
+
     public void delete(Database db, Admin admin, String tableName){
         (db.get(admin, tableName)).delete(this);
     }
-    
+
+    abstract public void delete(Database db, Admin admin);
+     
 }
