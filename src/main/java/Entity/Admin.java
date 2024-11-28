@@ -2,17 +2,15 @@ package Entity;
 
 public class Admin extends User {
     private int workingHours;
-    private Role role;
 
     public Admin(String username, String password,java.util.Date dateOfBirth, Role role, int workingHours){
         super(username, password, role, dateOfBirth);
-        this.role = role;
         this.workingHours = workingHours;
     }
 
     @Override
     public String toString() {
-        return "Role: " + role + "\nWorking Hours: " + workingHours;
+        return "Role: " + getRole() + "\nWorking Hours: " + workingHours;
     }
 
     public int getWorkingHours() {

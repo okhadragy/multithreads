@@ -36,19 +36,19 @@ public class EntityDAO<E extends Entity> {
         db.save(tableName, entities);
     }
 
-    public void delete(String key) {
+    public void delete(Object key) {
         entities.removeIf(entity -> entity.getKey().equals(key));
         db.save(tableName,entities);
     }
 
-    public E get(String key) throws RuntimeException{
+    public E get(Object key) throws RuntimeException{
         for (E e : entities) {
             if(e.getKey().equals(key)) return e;
         }
         throw new RuntimeException("Entity doesn't Exist");
     }
 
-    public int getIndex(String key){
+    public int getIndex(Object key){
         for (int i = 0; i < entities.size(); i++) {
             if(entities.get(i).getKey().equals(key)) return i;
         }

@@ -4,7 +4,7 @@ public class Order implements Entity{
     String id;
 
     @Override
-    public String getKey() {
+    public Object getKey() {
         return this.id;
     }
 

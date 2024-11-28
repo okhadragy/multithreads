@@ -3,7 +3,7 @@ package Entity;
 public abstract class User implements Entity {
     protected String username;
     protected String password;
-    protected Role role;
+    private Role role;
     protected java.util.Date dateOfBirth;
 
     public User(String username, String password,Role role ,java.util.Date dateOfBirth){
@@ -15,6 +15,10 @@ public abstract class User implements Entity {
 
     public Role getRole() {
         return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getUsername() {
@@ -42,7 +46,7 @@ public abstract class User implements Entity {
     }
 
     @Override
-    public String getKey() {
+    public Object getKey() {
         return this.username;
     }
 

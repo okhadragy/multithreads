@@ -6,6 +6,6 @@ package Entity;
  */
 public interface Entity{    
     abstract public String toString();
-    abstract public String getKey();
+    abstract public Object getKey();
     abstract public boolean equals(Object obj);
 }

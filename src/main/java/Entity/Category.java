@@ -47,7 +47,7 @@ public class Category implements Entity {
     }
     
     @Override
-    public String getKey() {
+    public Object getKey() {
         return this.id;
     }
 

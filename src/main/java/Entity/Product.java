@@ -108,7 +108,7 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     @Override
-    public String getKey(){
+    public Object getKey(){
         return this.id;
     }
 }

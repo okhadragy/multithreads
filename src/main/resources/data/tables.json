@@ -2,5 +2,6 @@
     "users": "src/main/resources/data/users.json",
     "orders": "src/main/resources/data/orders.json",
     "products": "src/main/resources/data/products.json",
-    "categories": "src/main/resources/data/categories.json"
+    "categories": "src/main/resources/data/categories.json",
+    "permissons": "src/main/resources/data/permissons.json"
 }
