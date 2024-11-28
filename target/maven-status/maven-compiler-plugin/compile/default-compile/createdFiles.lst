@@ -1,0 +1,15 @@
+Services\PermissionService.class
+Entity\AlreadyExists.class
+Entity\User.class
+Services\ProductService.class
+Entity\Order.class
+Database\Database$1.class
+Entity\Role.class
+Entity\Category.class
+Database\EntityDAO.class
+Services\EntityService.class
+Entity\AlreadySaved.class
+Database\Database.class
+Entity\Product.class
+Entity\Entity.class
+Entity\Admin.class

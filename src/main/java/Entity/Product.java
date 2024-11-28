@@ -1,3 +1,5 @@
+package Entity;
+
 class AlreadyExists extends RuntimeException {
     AlreadyExists(String s){
         super(s);
@@ -10,10 +12,9 @@ class AlreadySaved extends RuntimeException {
     }
 }
 
-public class Product extends Entity implements Comparable<Product> {
+public class Product implements Entity, Comparable<Product> {
     private static int idCounter = 1;
-
-    private int id;
+    private String id;
     private String name;
     private String description;
     private double price;
@@ -22,8 +23,9 @@ public class Product extends Entity implements Comparable<Product> {
 
     // Default quantity is 1
 
-    Product(String name, String desc, double price, Category category){
-        this.id = idCounter++;
+    public Product(String name, String desc, double price, Category category){
+        this.id = String.valueOf(idCounter);
+        idCounter++;
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -31,29 +33,17 @@ public class Product extends Entity implements Comparable<Product> {
         this.quantity = 1;
     }
 
-    Product(String name, String desc, double price, Category category, int quantity){
-        this.id = idCounter++;
-        this.name = name;
-        this.description = desc;
-        this.price = price;
-        this.category = category;
+    public Product(String name, String desc, double price, Category category, int quantity){
+        this(name, desc, price, category);
         this.quantity = quantity;
     }
 
 
-    public int getId(){
+    public String getId(){
         return id;
     }
 
-    public void setId(int id, Database db, Admin admin){
-        Table productList = db.get(admin, "products");
-
-        for (int i = 0; i < productList.getNumberOfElements(); i++) {
-            if(id == ((Product)productList.get(i)).id) {
-                throw new AlreadyExists("Product ID already exists");
-            }    
-        }
-
+    public void setId(String id){
         this.id = id;
     }
 
@@ -110,25 +100,15 @@ public class Product extends Entity implements Comparable<Product> {
         return false;
     }
 
-    public void save(Database db, Admin admin){
-        if(this.isSaved()){
-            throw new AlreadySaved("Product already saved");
-        }
-
-        else{
-            super.save(db, admin, "products");
-        }
-    }
-
-    public void delete(Database db, Admin admin){
-        super.delete(db, admin, "products");
-    }
-
     @Override
     public int compareTo(Product p) {
         if(price == p.price) return 0;
         else if(price > p.price) return 1;
         return -1;
     }
-    
+
+    @Override
+    public String getKey(){
+        return this.id;
+    }
 }
