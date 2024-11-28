@@ -7,15 +7,18 @@ public class Permisson implements Entity{
     private ArrayList<String> actions;
 
     public Permisson(Role role, ArrayList<String> actions){
-        this.role = role;
-        this.actions = actions;
+        setRole(role);
+        setActions(actions);
     }
 
     public Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Role role)  throws RuntimeException{
+        if (role == null) {
+            throw new RuntimeException("You must pass role"); 
+        }
         this.role = role;
     }
 
@@ -24,6 +27,10 @@ public class Permisson implements Entity{
     }
 
     public void setActions(ArrayList<String> actions) {
+        if (actions == null) {
+            throw new RuntimeException("You must pass roles"); 
+        }
+
         this.actions = actions;
     }
 
