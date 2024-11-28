@@ -17,13 +17,14 @@ public class Product implements Entity, Comparable<Product> {
     private String id;
     private String name;
     private String description;
+    private String image;
     private double price;
     private Category category;
     private int quantity;
 
     // Default quantity is 1
 
-    public Product(String name, String desc, double price, Category category){
+    public Product(String name, String desc, String image,double price, Category category){
         this.id = String.valueOf(idCounter);
         idCounter++;
         this.name = name;
@@ -33,8 +34,8 @@ public class Product implements Entity, Comparable<Product> {
         this.quantity = 1;
     }
 
-    public Product(String name, String desc, double price, Category category, int quantity){
-        this(name, desc, price, category);
+    public Product(String name, String desc, String image, double price, Category category, int quantity){
+        this(name, desc,image, price, category);
         this.quantity = quantity;
     }
 
@@ -85,6 +86,14 @@ public class Product implements Entity, Comparable<Product> {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
