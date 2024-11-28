@@ -37,10 +37,6 @@ public abstract class User implements Entity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
     @Override
     public String getKey() {
         return this.username;
