@@ -13,6 +13,10 @@ public abstract class User implements Entity {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
     public String getUsername() {
         return username;
     }

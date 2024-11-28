@@ -10,10 +10,6 @@ public class Admin extends User {
         this.workingHours = workingHours;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
     @Override
     public String toString() {
         return "Role: " + role + "\nWorking Hours: " + workingHours;
