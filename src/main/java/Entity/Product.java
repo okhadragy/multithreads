@@ -1,19 +1,6 @@
 package Entity;
 
-class AlreadyExists extends RuntimeException {
-    AlreadyExists(String s){
-        super(s);
-    }
-}
-
-class AlreadySaved extends RuntimeException {
-    AlreadySaved(String s){
-        super(s);
-    }
-}
-
 public class Product implements Entity, Comparable<Product> {
-    private static int idCounter = 1;
     private String id;
     private String name;
     private String description;
@@ -22,15 +9,13 @@ public class Product implements Entity, Comparable<Product> {
     private Category category;
     private int quantity;
 
-    // Default quantity is 1
 
     public Product(String name, String desc, String image,double price, Category category){
-        this.id = String.valueOf(idCounter);
-        idCounter++;
-        this.name = name;
-        this.description = desc;
-        this.price = price;
-        this.category = category;
+        setId(id);
+        setName(name);
+        setDescription(desc);
+        setPrice(price);
+        setCategory(category);
         this.quantity = 1;
     }
 
@@ -61,14 +46,20 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     public void setDescription(String description) {
-        this.description = description;
-    }
+        if (description == null ) {
+           throw new IllegalArgumentException("Description cannot be null or empty.");
+       }
+       this.description = description;
+   }
 
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
+        if (price <= 0) {
+            throw new IllegalArgumentException("Price must be greater than 0.");
+        }
         this.price = price;
     }
 
@@ -77,7 +68,10 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     public void setCategory(Category category) {
-        this.category = category;
+        if (category == null) {
+          throw new IllegalArgumentException("Category cannot be null.");
+        }
+      this.category = category;
     }
 
     public int getQuantity() {
@@ -85,6 +79,9 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
         this.quantity = quantity;
     }
 
@@ -94,6 +91,11 @@ public class Product implements Entity, Comparable<Product> {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public Object getKey(){
+        return this.id;
     }
 
     @Override
@@ -114,10 +116,5 @@ public class Product implements Entity, Comparable<Product> {
         if(price == p.price) return 0;
         else if(price > p.price) return 1;
         return -1;
-    }
-
-    @Override
-    public Object getKey(){
-        return this.id;
     }
 }
