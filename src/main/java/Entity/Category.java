@@ -55,7 +55,7 @@ public class Category implements Entity {
     }
 
     public ArrayList<String> getProducts() {
-        return new ArrayList<>(products); 
+        return products; 
     }
 
     public void setProducts(ArrayList<String> products) {
@@ -64,10 +64,10 @@ public class Category implements Entity {
         }
         for (String product : products) {
             if (product == null || product.trim().isEmpty()) {
-                throw new IllegalArgumentException("Product names cannot be null or empty.");
+                throw new IllegalArgumentException("Product ID cannot be null or empty.");
             }
         }
-        this.products = new ArrayList<>(products); 
+        this.products = products; 
     }
     
     @Override

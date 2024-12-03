@@ -1,4 +1,6 @@
 package Services;
+import java.util.ArrayList;
+
 import Database.EntityDAO;
 import Entity.*;
 
@@ -8,7 +10,6 @@ public class AuthService extends EntityService<User>{
 
     public AuthService(){
         super("users", User.class);
-        PermissionService permisson = new PermissionService();
         entityDAO = super.entityDAO;
     }
 
@@ -47,7 +48,8 @@ public class AuthService extends EntityService<User>{
         }
         
         // validate each data and add orderService
-        User user = new Customer(username,password,dateOfBirth,balance,address,gender,"1");
+        User user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),"1");
+        
         try {
             entityDAO.add(user);
         } catch (Exception e) {

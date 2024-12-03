@@ -6,38 +6,45 @@ public class Product implements Entity, Comparable<Product> {
     private String description;
     private String image;
     private double price;
-    private Category category;
+    private String categoryId;
     private int quantity;
 
-
-    public Product(String name, String desc, String image,double price, Category category){
+    public Product(String name, String desc, String image, double price, String categoryId) {
         setId(id);
         setName(name);
         setDescription(desc);
         setPrice(price);
-        setCategory(category);
-        this.quantity = 1;
+        setCategoryId(categoryId);
+        setQuantity(1);
     }
 
-    public Product(String name, String desc, String image, double price, Category category, int quantity){
-        this(name, desc,image, price, category);
-        this.quantity = quantity;
+    public Product(String name, String desc, String image, double price, String categoryId, int quantity) {
+        this(name, desc, image, price, categoryId);
+        setQuantity(quantity);
     }
 
-
-    public String getId(){
+    public String getId() {
         return id;
     }
 
-    public void setId(String id){
+    public void setId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID cannot be null or empty.");
+        }
         this.id = id;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+        if (name.length() > 50) {
+            throw new IllegalArgumentException("Name cannot exceed 50 characters.");
+        }
         this.name = name;
     }
 
@@ -46,11 +53,14 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     public void setDescription(String description) {
-        if (description == null ) {
-           throw new IllegalArgumentException("Description cannot be null or empty.");
-       }
-       this.description = description;
-   }
+        if (description == null) {
+            throw new IllegalArgumentException("Description cannot be null or empty.");
+        }
+        if (description.length() > 500) {
+            throw new IllegalArgumentException("Description cannot exceed 500 characters.");
+        }
+        this.description = description;
+    }
 
     public double getPrice() {
         return price;
@@ -63,15 +73,15 @@ public class Product implements Entity, Comparable<Product> {
         this.price = price;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        if (category == null) {
-          throw new IllegalArgumentException("Category cannot be null.");
+    public void setCategoryId(String categoryId) {
+        if (categoryId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Category Id cannot be Empty.");
         }
-      this.category = category;
+        this.categoryId = categoryId;
     }
 
     public int getQuantity() {
@@ -94,27 +104,30 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     @Override
-    public Object getKey(){
+    public Object getKey() {
         return this.id;
     }
 
     @Override
     public String toString() {
-        return "ID: " + id + "\nName: " + name + "\nDescription: " + description + "\nPrice: " + price + "\nCategory: " + category + "\nQuantity: " + quantity;
+        return "ID: " + id + "\nName: " + name + "\nDescription: " + description + "\nPrice: " + price + "\nQuantity: "
+                + quantity;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Product){
-            return this.id == ((Product)obj).id;
+        if (obj instanceof Product) {
+            return this.id == ((Product) obj).id;
         }
         return false;
     }
 
     @Override
     public int compareTo(Product p) {
-        if(price == p.price) return 0;
-        else if(price > p.price) return 1;
+        if (price == p.price)
+            return 0;
+        else if (price > p.price)
+            return 1;
         return -1;
     }
 }

@@ -7,14 +7,14 @@ public class Customer extends User {
     private String address;
     private Gender gender;
     private ArrayList<String> interests;
-    private String cart;
+    private String cartId;
     
-    public Customer(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender, String cart){
+    public Customer(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender, ArrayList<String> interests, String cartId){
         super(username, password, Role.customer, dateOfBirth);
         setBalance(balance);
         setGender(gender);
-        interests = new ArrayList<>();
-        setCart(cart);
+        setInterests(interests);
+        setCartId(cartId);
     }
 
     public double getBalance() {
@@ -22,6 +22,9 @@ public class Customer extends User {
     }
 
     public void setBalance(double balance) {
+        if (balance<0) {
+            throw new IllegalArgumentException("Balance cannot be negative.");
+        }
         this.balance = balance;
     }
 
@@ -30,6 +33,9 @@ public class Customer extends User {
     }
 
     public void setAddress(String address) {
+        if (address == null || address.trim().isEmpty()) {
+            throw new IllegalArgumentException("Address cannot be null or empty.");
+        }
         this.address = address;
     }
 
@@ -38,6 +44,9 @@ public class Customer extends User {
     }
 
     public void setGender(Gender gender) {
+        if (gender == null) {
+            throw new IllegalArgumentException("Gender cannot be null.");
+        }
         this.gender = gender;
     }
 
@@ -46,15 +55,29 @@ public class Customer extends User {
     }
 
     public void setInterests(ArrayList<String> interests) {
+        if (interests == null) {
+            throw new IllegalArgumentException("Products cannot be null.");
+        }
+
+        for (String product : interests) {
+            if (product == null || product.trim().isEmpty()) {
+                throw new IllegalArgumentException("Product Id cannot be null or empty.");
+            }
+        }
+
         this.interests = interests;
     }
 
-    public String getCart() {
-        return cart;
+    public String getCartId() {
+        return cartId;
     }
 
-    public void setCart(String cart) {
-        this.cart = cart;
+    public void setCartId(String cartId) {
+        if (cartId == null || cartId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Cart Id cannot be null or empty.");
+        }
+
+        this.cartId = cartId;
     }
 
     @Override

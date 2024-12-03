@@ -15,9 +15,9 @@ public class Permisson implements Entity{
         return role;
     }
 
-    public void setRole(Role role)  throws RuntimeException{
+    public void setRole(Role role){
         if (role == null) {
-            throw new RuntimeException("You must pass role"); 
+            throw new IllegalArgumentException("Role cannot be null."); 
         }
         this.role = role;
     }
@@ -28,7 +28,13 @@ public class Permisson implements Entity{
 
     public void setActions(ArrayList<String> actions) {
         if (actions == null) {
-            throw new RuntimeException("You must pass roles"); 
+            throw new IllegalArgumentException("Actions cannot be null.");
+        }
+
+        for (String action : actions) {
+            if (action == null || action.trim().isEmpty()) {
+                throw new IllegalArgumentException("Action cannot be null or empty.");
+            }
         }
 
         this.actions = actions;
