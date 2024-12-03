@@ -1,16 +1,17 @@
 package Services;
 import java.util.ArrayList;
 
-import Database.EntityDAO;
 import Entity.*;
-
-public class AuthService extends EntityService<User>{
-    private final EntityDAO<User> entityDAO;
+public class AuthService{
+    private final EntityDAO<Customer> customerDAO;
+    private final EntityDAO<Admin> adminDAO;
+    private final EntityDAO<Order> orderDAO;
     private User loggedInUser;
 
     public AuthService(){
-        super("users", User.class);
-        entityDAO = super.entityDAO;
+        customerDAO = new EntityDAO<>("customers", Customer.class);
+        adminDAO = new EntityDAO<>("admins", Admin.class);
+        orderDAO = new EntityDAO<>("orders", Order.class);
     }
 
     public boolean Login(String username, String password){
@@ -22,15 +23,26 @@ public class AuthService extends EntityService<User>{
             return false;
         }
 
-        int i = entityDAO.getIndex(username);
-        if (i ==-1) {
-            return false;
+        int i = customerDAO.getIndex(username);
+        if (i !=-1) {
+            if (customerDAO.getAll().get(i).checkPassword(password)) {
+                loggedInUser = customerDAO.getAll().get(i);
+                return true;
+            }else{
+                return false;
+            }
         }
 
-        if (entityDAO.getAll().get(i).checkPassword(password)) {
-            loggedInUser = entityDAO.getAll().get(i);
-            return true;
+        i = adminDAO.getIndex(username);
+        if (i !=-1) {
+            if (adminDAO.getAll().get(i).checkPassword(password)) {
+                loggedInUser = adminDAO.getAll().get(i);
+                return true;
+            }else{
+                return false;
+            }
         }
+        
         return false;
     }
 
@@ -43,21 +55,19 @@ public class AuthService extends EntityService<User>{
             return false;
         }
 
-        if (username==null || password==null || dateOfBirth==null || address ==null || gender==null) {
-            return false;
-        }
-        
-        // validate each data and add orderService
-        User user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),"1");
-        
         try {
-            entityDAO.add(user);
+            String cartId = String.valueOf(orderDAO.getAll().size()+1);
+            Order cart = new Order(cartId, username, new ArrayList<>(), balance, null, Status.draft);
+            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);    
+            customerDAO.add(user);
+            orderDAO.add(cart);
+            loggedInUser = user;
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         } catch (Exception e) {
             return false;
         }
-        
-        loggedInUser = user;
-        return true;
     }
 
     public User getLoggedInUser() {

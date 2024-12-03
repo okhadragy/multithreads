@@ -74,9 +74,6 @@ public class Order implements Entity {
     }
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
-        if (paymentMethod == null) {
-            throw new IllegalArgumentException("Payment Method cannot be null.");
-        }
         this.paymentMethod = paymentMethod;
     }
 

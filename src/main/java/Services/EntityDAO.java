@@ -1,15 +1,15 @@
-package Database;
+package Services;
 
 import Entity.*;
 import java.util.ArrayList;
 
-public class EntityDAO<E extends Entity> {
+final class EntityDAO<E extends Entity> {
     private final Database<E> db;
     private ArrayList<E> entities;
     private String tableName;
     private final Class type;
 
-    public EntityDAO(String tableName, Class type) {
+    EntityDAO(String tableName, Class type) {
         this.type = type;
         db = new Database<>(type);
         this.tableName = tableName;
@@ -22,8 +22,9 @@ public class EntityDAO<E extends Entity> {
 
     public void add(E e) throws NullPointerException {
         if (e == null){
-            throw new NullPointerException("Entity doesn't exist");
+            throw new IllegalArgumentException("Entity Object cannot be null.");
         }
+
         if (getIndex(e.getKey()) != -1) {
             throw new RuntimeException("There exists an entity with the same key");
         }
@@ -37,11 +38,18 @@ public class EntityDAO<E extends Entity> {
     }
 
     public void delete(Object key) {
+        if (key==null) {
+            throw new IllegalArgumentException("Key cannot be null.");
+        }
+
         entities.removeIf(entity -> entity.getKey().equals(key));
         db.save(tableName,entities);
     }
 
     public E get(Object key) throws RuntimeException{
+        if (key==null) {
+            throw new IllegalArgumentException("Key cannot be null.");
+        }
         for (E e : entities) {
             if(e.getKey().equals(key)) return e;
         }
@@ -49,6 +57,10 @@ public class EntityDAO<E extends Entity> {
     }
 
     public int getIndex(Object key){
+        if (key==null) {
+            throw new IllegalArgumentException("Key cannot be null.");
+        }
+
         for (int i = 0; i < entities.size(); i++) {
             if(entities.get(i).getKey().equals(key)) return i;
         }
@@ -56,6 +68,10 @@ public class EntityDAO<E extends Entity> {
     }
 
     public void update(E updatedE) throws RuntimeException {
+        if (updatedE == null){
+            throw new IllegalArgumentException("Entity Object cannot be null.");
+        }
+
         int i = getIndex(updatedE.getKey());
         if (i!=-1) {
             entities.set(i, updatedE);

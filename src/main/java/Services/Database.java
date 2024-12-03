@@ -1,4 +1,4 @@
-package Database;
+package Services;
 
 import Entity.*;
 import com.google.gson.Gson;
@@ -7,7 +7,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Database<E extends Entity> {
+final class Database<E extends Entity> {
     private final Gson gson = new Gson();
     private final String TABLES_PATH = "src/main/resources/data/tables.json";
     private static Map<String, String> tables = new HashMap<>();
