@@ -3,10 +3,10 @@ package Entity;
 public enum Status {
     draft(1),
     processing(2),
-    cancelled(3),
-    closed(4),
-    delivered(5),
-    returned(6);
+    shipping(3),
+    delivered(4),
+    closed(5),
+    cancelled(6);
     
     private final int code;
 

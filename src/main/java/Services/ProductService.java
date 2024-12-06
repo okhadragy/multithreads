@@ -37,7 +37,7 @@ public class ProductService extends EntityService<Product> {
     }
 
     public Product get(String id){
-        if (permission.hasPermission("customers","retrieve")) {
+        if (permission.hasPermission("products","retrieve")) {
             return new Product(getEntityDAO().get(id));
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
@@ -53,7 +53,7 @@ public class ProductService extends EntityService<Product> {
     }
 
     public <T> void update(String id,String parameter ,T newData) {
-        if (permission.hasPermission("customers", "update")) {
+        if (permission.hasPermission("products", "update")) {
             Product product = getEntityDAO().get(id);
             switch (parameter.toLowerCase()) {
                 case "name":

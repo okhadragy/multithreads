@@ -86,6 +86,7 @@ public class CustomerService extends EntityService<Customer> {
             Customer customer = getEntityDAO().get(username);
             Order cart = orderDAO.get(customer.getCartId());
             cart.addProduct(productId);
+            orderDAO.update(cart);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -97,6 +98,7 @@ public class CustomerService extends EntityService<Customer> {
             Customer customer = getEntityDAO().get(username);
             Order cart = orderDAO.get(customer.getCartId());
             cart.removeProduct(productId);
+            orderDAO.update(cart);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -119,6 +121,7 @@ public class CustomerService extends EntityService<Customer> {
             ArrayList<String> products = customer.getInterests();
             products.add(productId);
             customer.setInterests(products);
+            getEntityDAO().update(customer);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -131,6 +134,7 @@ public class CustomerService extends EntityService<Customer> {
             ArrayList<String> products = customer.getInterests();
             products.remove(productId);
             customer.setInterests(products);
+            getEntityDAO().update(customer);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }

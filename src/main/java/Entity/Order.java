@@ -4,15 +4,15 @@ import java.util.*;
 
 public class Order implements Entity {
     private String id;
-    private String customerId;
+    private String customer;
     private Map<String, Integer> products;
     private double total;
     private PaymentMethod paymentMethod;
     private Status status;
 
-    public Order(String id, String customerId, Map<String, Integer> products, double total, PaymentMethod paymentMethod, Status status) {
+    public Order(String id, String customer, Map<String, Integer> products, double total, PaymentMethod paymentMethod, Status status) {
         setId(id);
-        setCustomerId(customerId);
+        setCustomer(customer);
         setProducts(products);
         setTotal(total);
         setPaymentMethod(paymentMethod);
@@ -20,7 +20,7 @@ public class Order implements Entity {
     }
 
     public Order(Order order){
-        this(order.id, order.customerId, order.products, order.total, order.paymentMethod, order.status);
+        this(order.id, order.customer, order.products, order.total, order.paymentMethod, order.status);
     }
 
     public String getId() {
@@ -34,15 +34,15 @@ public class Order implements Entity {
         this.id = id;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(String customerId) {
-        if (customerId == null || customerId.trim().isEmpty()) {
+    public void setCustomer(String customer) {
+        if (customer == null || customer.trim().isEmpty()) {
             throw new IllegalArgumentException("Customer Id cannot be null or empty.");
         }
-        this.customerId = customerId;
+        this.customer = customer;
     }
 
     public Map<String, Integer> getProducts() {
