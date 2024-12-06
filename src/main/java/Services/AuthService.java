@@ -1,5 +1,6 @@
 package Services;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Entity.*;
 public class AuthService{
@@ -26,7 +27,7 @@ public class AuthService{
         int i = customerDAO.getIndex(username);
         if (i !=-1) {
             if (customerDAO.getAll().get(i).checkPassword(password)) {
-                loggedInUser = customerDAO.getAll().get(i);
+                loggedInUser = new Customer(customerDAO.getAll().get(i));
                 return true;
             }else{
                 return false;
@@ -36,7 +37,7 @@ public class AuthService{
         i = adminDAO.getIndex(username);
         if (i !=-1) {
             if (adminDAO.getAll().get(i).checkPassword(password)) {
-                loggedInUser = adminDAO.getAll().get(i);
+                loggedInUser = new Admin(adminDAO.getAll().get(i));
                 return true;
             }else{
                 return false;
@@ -61,7 +62,7 @@ public class AuthService{
 
         try {
             String cartId = orderDAO.nextId();
-            Order cart = new Order(cartId, username, new ArrayList<>(), balance, null, Status.draft);
+            Order cart = new Order(cartId, username, new HashMap<>(), balance, null, Status.draft);
             Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);    
             customerDAO.add(user);
             orderDAO.add(cart);

@@ -51,7 +51,9 @@ final class EntityDAO<E extends Entity> {
             throw new IllegalArgumentException("Key cannot be null.");
         }
         for (E e : entities) {
-            if(e.getKey().equals(key)) return e;
+            if(e.getKey().equals(key)){
+                return e;
+            }
         }
         throw new RuntimeException("Entity doesn't Exist");
     }

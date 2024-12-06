@@ -23,6 +23,10 @@ public class Product implements Entity, Comparable<Product> {
         setQuantity(quantity);
     }
 
+    public Product(Product product){
+        this(product.id, product.name, product.description, product.image, product.price, product.categoryId);
+    }
+
     public String getId() {
         return id;
     }

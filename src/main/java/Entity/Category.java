@@ -15,6 +15,10 @@ public class Category implements Entity {
         setProducts(products); 
     }
 
+    public Category(Category category){
+        this(category.id, category.name, category.description, category.products);
+    }
+
     public String getId() {
         return id;
     }

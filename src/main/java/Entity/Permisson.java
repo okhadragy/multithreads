@@ -11,6 +11,10 @@ public class Permisson implements Entity{
         setActions(actions);
     }
 
+    public Permisson(Permisson permisson){
+        this(permisson.role, permisson.actions);
+    }
+
     public Role getRole() {
         return role;
     }

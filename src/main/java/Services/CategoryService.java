@@ -30,7 +30,7 @@ public class CategoryService extends EntityService<Category> {
 
     public Category get(String id){
         if (permission.hasPermission("categories","retrieve")) {
-            return getEntityDAO().get(id);
+            return new Category(getEntityDAO().get(id));
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }

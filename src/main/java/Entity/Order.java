@@ -1,22 +1,26 @@
 package Entity;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Order implements Entity {
     private String id;
     private String customerId;
-    private ArrayList<String> products;
+    private Map<String, Integer> products;
     private double total;
     private PaymentMethod paymentMethod;
     private Status status;
 
-    public Order(String id, String customerId, ArrayList<String> products, double total, PaymentMethod paymentMethod, Status status) {
+    public Order(String id, String customerId, Map<String, Integer> products, double total, PaymentMethod paymentMethod, Status status) {
         setId(id);
         setCustomerId(customerId);
         setProducts(products);
         setTotal(total);
         setPaymentMethod(paymentMethod);
         setStatus(status);
+    }
+
+    public Order(Order order){
+        this(order.id, order.customerId, order.products, order.total, order.paymentMethod, order.status);
     }
 
     public String getId() {
@@ -41,20 +45,44 @@ public class Order implements Entity {
         this.customerId = customerId;
     }
 
-    public ArrayList<String> getProducts() {
-        return new ArrayList<>(products);
+    public Map<String, Integer> getProducts() {
+        return new HashMap<>(products);
     }
 
-    public void setProducts(ArrayList<String> products) {
+    public void addProduct(String productId){
+        if (products.get(productId)==null) {
+            products.put(productId, 1);
+        }else {
+            products.put(productId, products.get(productId)+1);
+        } 
+    }
+    
+    public void removeProduct(String productId){
+        if (products.get(productId)==null) {
+            throw new IllegalArgumentException("this product is not in the order");
+        }
+
+        if (products.get(productId)==1) {
+            products.remove(productId);
+        }else {
+            products.put(productId, products.get(productId)-1);
+        } 
+    }
+
+    public void setProducts(Map<String, Integer> products) {
         if (products == null) {
             throw new IllegalArgumentException("Products cannot be null.");
         }
-
-        for (String product : products) {
-            if (product == null || product.trim().isEmpty()) {
+        
+        for (Map.Entry<String, Integer>entry : products.entrySet()) {
+            if (entry.getKey() == null || entry.getKey().trim().isEmpty()) {
                 throw new IllegalArgumentException("Product Id cannot be null or empty.");
             }
+            if (entry.getValue() < 1) {
+                throw new IllegalArgumentException("Quantity can't be less than 1.");
+            }
         }
+
         this.products = products;
     }
 

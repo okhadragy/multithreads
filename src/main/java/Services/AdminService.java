@@ -58,7 +58,7 @@ public class AdminService extends EntityService<Admin>{
 
     public Admin get(String username){
         if (permission.hasPermission("admins","retrieve")||getLoggedInUser().equals(getEntityDAO().get(username))) {
-            return getEntityDAO().get(username);
+            return new Admin(getEntityDAO().get(username));
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }

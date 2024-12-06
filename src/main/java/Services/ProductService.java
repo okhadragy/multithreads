@@ -38,7 +38,7 @@ public class ProductService extends EntityService<Product> {
 
     public Product get(String id){
         if (permission.hasPermission("customers","retrieve")) {
-            return getEntityDAO().get(id);
+            return new Product(getEntityDAO().get(id));
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
