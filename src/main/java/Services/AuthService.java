@@ -56,7 +56,7 @@ public class AuthService{
         }
 
         try {
-            String cartId = String.valueOf(orderDAO.getAll().size()+1);
+            String cartId = orderDAO.nextId();
             Order cart = new Order(cartId, username, new ArrayList<>(), balance, null, Status.draft);
             Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);    
             customerDAO.add(user);

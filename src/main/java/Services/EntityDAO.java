@@ -17,7 +17,7 @@ final class EntityDAO<E extends Entity> {
     }
 
     public ArrayList<E> getAll() {
-        return entities;
+        return new ArrayList<>(entities);
     }
 
     public void add(E e) throws NullPointerException {
@@ -83,6 +83,10 @@ final class EntityDAO<E extends Entity> {
 
     public void sort() {
         entities.sort(null);
+    }
+
+    public String nextId(){
+        return String.valueOf(entities.size()+1);
     }
 
 }

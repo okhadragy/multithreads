@@ -23,10 +23,16 @@ public class PermissionService extends EntityService<Permisson>{
     }
 
     public boolean hasPermission(String tableName ,String action){
+        if (getLoggedInUser()==null) {
+            return false;
+        }
         return hasPermission(getLoggedInUser().getRole(),tableName, action);
     }
 
     public boolean hasPermission(String action){
+        if (getLoggedInUser()==null) {
+            return false;
+        }
         return hasPermission(getLoggedInUser().getRole(), action);
     }
 
@@ -63,7 +69,10 @@ public class PermissionService extends EntityService<Permisson>{
         return hasPermission(role, action);
     }
 
-    public void addPermisson(Role role, ArrayList<String> actions) throws RuntimeException{
+    public void create(Role role, ArrayList<String> actions) throws RuntimeException{
+        if (getLoggedInUser() == null) {
+            throw new RuntimeException("Login first to do this action");
+        }
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             getEntityDAO().add(new Permisson(role, actions));
         }else{
@@ -71,7 +80,10 @@ public class PermissionService extends EntityService<Permisson>{
         }
     }
 
-    public void deletePermisson(Role role) throws RuntimeException {
+    public void delete(Role role) throws RuntimeException {
+        if (getLoggedInUser() == null) {
+            throw new RuntimeException("Login first to do this action");
+        }
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             getEntityDAO().delete(role);
         }else{
@@ -83,6 +95,9 @@ public class PermissionService extends EntityService<Permisson>{
     public void addAction(Role role, String action){
         if (action==null||action.trim().isEmpty()) {
             throw new IllegalArgumentException("Action cannot be null or empty.");
+        }
+        if (getLoggedInUser() == null) {
+            throw new RuntimeException("Login first to do this action");
         }
 
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
@@ -99,6 +114,10 @@ public class PermissionService extends EntityService<Permisson>{
     }
 
     public void addActions(Role role, ArrayList<String> actions) throws RuntimeException{
+        if (getLoggedInUser() == null) {
+            throw new RuntimeException("Login first to do this action");
+        }
+
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             Permisson permisson = getEntityDAO().get(role);
             permisson.setActions(actions);
@@ -113,6 +132,10 @@ public class PermissionService extends EntityService<Permisson>{
     }
 
     public void deleteAction(Role role, String action) throws RuntimeException {
+        if (getLoggedInUser() == null) {
+            throw new RuntimeException("Login first to do this action");
+        }
+        
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             Permisson permisson = getEntityDAO().get(role);
             permisson.getActions().remove(action);

@@ -51,7 +51,7 @@ public class Customer extends User {
     }
 
     public ArrayList<String> getInterests() {
-        return interests;
+        return new ArrayList<>(interests);
     }
 
     public void setInterests(ArrayList<String> interests) {

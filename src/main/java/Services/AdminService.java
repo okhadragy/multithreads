@@ -11,8 +11,8 @@ public class AdminService extends EntityService<Admin>{
         permission = new PermissionService(authService);
     }
 
-    public void add(String username, String password, java.util.Date dateOfBirth, Role role, int workingHours){
-        if (permission.hasPermission("admins","add")) {
+    public void create(String username, String password, java.util.Date dateOfBirth, Role role, int workingHours){
+        if (permission.hasPermission("admins","create")) {
             getEntityDAO().add(new Admin(username, password, dateOfBirth, role, workingHours));
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
@@ -53,31 +53,29 @@ public class AdminService extends EntityService<Admin>{
     }
 
     public Admin get(String username){
-        if (permission.hasPermission("admins","retrieve")) {
+        if (permission.hasPermission("admins","retrieve")||getLoggedInUser().equals(getEntityDAO().get(username))) {
             return getEntityDAO().get(username);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
     }
 
-    public void setPassword(String username, String password){
+    public <T> void update(String username,String parameter ,T newData){
         if (permission.hasPermission("admins","update")) {
             Admin user = getEntityDAO().get(username);
-            user.setPassword(password);
+            switch (parameter.toLowerCase()) {
+                case "password":
+                    user.setPassword((String)newData);
+                    break;
+                case "workinghours":
+                    user.setWorkingHours((int)newData);
+                    break;
+                default:
+                    throw new IllegalArgumentException("This parameter doesn't exist");
+            }
             getEntityDAO().update(user);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
     }
-
-    public void setWorkingHours(String username, int workingHours){
-        if (permission.hasPermission("admins","update")) {
-            Admin user = getEntityDAO().get(username);
-            user.setWorkingHours(workingHours);
-            getEntityDAO().update(user);
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
-        }
-    }
-
 }

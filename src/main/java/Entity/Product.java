@@ -9,7 +9,7 @@ public class Product implements Entity, Comparable<Product> {
     private String categoryId;
     private int quantity;
 
-    public Product(String name, String desc, String image, double price, String categoryId) {
+    public Product(String id, String name, String desc, String image, double price, String categoryId) {
         setId(id);
         setName(name);
         setDescription(desc);
@@ -18,8 +18,8 @@ public class Product implements Entity, Comparable<Product> {
         setQuantity(1);
     }
 
-    public Product(String name, String desc, String image, double price, String categoryId, int quantity) {
-        this(name, desc, image, price, categoryId);
+    public Product(String id, String name, String desc, String image, double price, String categoryId, int quantity) {
+        this(id, name, desc, image, price, categoryId);
         setQuantity(quantity);
     }
 

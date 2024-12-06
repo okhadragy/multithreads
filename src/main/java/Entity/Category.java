@@ -55,7 +55,7 @@ public class Category implements Entity {
     }
 
     public ArrayList<String> getProducts() {
-        return products; 
+        return new ArrayList<>(products); 
     }
 
     public void setProducts(ArrayList<String> products) {
