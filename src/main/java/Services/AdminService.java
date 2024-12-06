@@ -13,6 +13,10 @@ public class AdminService extends EntityService<Admin>{
 
     public void create(String username, String password, java.util.Date dateOfBirth, Role role, int workingHours){
         if (permission.hasPermission("admins","create")) {
+            if (getEntityDAO().getIndex(username)!=-1) {
+                throw new IllegalArgumentException("This username is used");
+            }
+            
             getEntityDAO().add(new Admin(username, password, dateOfBirth, role, workingHours));
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");

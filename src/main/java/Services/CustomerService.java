@@ -15,7 +15,11 @@ public class CustomerService extends EntityService<Customer> {
     }
 
     public void create(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender) {        
-        if (permission.hasPermission("customers", "create") || getAuthService().getLoggedInUser()==null) {
+        if (permission.hasPermission("customers", "create")) {
+            if (getEntityDAO().getIndex(username)!=-1) {
+                throw new IllegalArgumentException("This username is used");
+            }
+
             String cartId = orderDAO.nextId();
             Order cart = new Order(cartId, username, new ArrayList<>(), balance, null, Status.draft);
             Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);    

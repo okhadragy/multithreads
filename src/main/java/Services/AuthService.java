@@ -55,6 +55,10 @@ public class AuthService{
             return false;
         }
 
+        if (customerDAO.getIndex(username)!=-1) {
+            return false;
+        }
+
         try {
             String cartId = orderDAO.nextId();
             Order cart = new Order(cartId, username, new ArrayList<>(), balance, null, Status.draft);
