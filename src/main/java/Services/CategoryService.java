@@ -7,7 +7,7 @@ import Entity.*;
 public class CategoryService extends EntityService<Category> {
     private PermissionService permission;
 
-    CategoryService(AuthService authService){
+    public CategoryService(AuthService authService){
         super("categories",Category.class, authService);
         permission = new PermissionService(authService);
     }

@@ -9,7 +9,7 @@ public class OrderService extends EntityService<Order> {
     private EntityDAO<Product> productDAO;
     private EntityDAO<Customer> customerDAO;
 
-    OrderService(AuthService authService) {
+    public OrderService(AuthService authService) {
         super("orders", Order.class, authService);
         permission = new PermissionService(authService);
     }

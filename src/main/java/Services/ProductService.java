@@ -7,7 +7,7 @@ import Entity.*;
 public class ProductService extends EntityService<Product> {
     private PermissionService permission;
 
-    ProductService(AuthService authService){
+    public ProductService(AuthService authService){
         super("products",Product.class, authService);
         permission = new PermissionService(authService);
     }
