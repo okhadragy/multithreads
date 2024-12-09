@@ -6,7 +6,7 @@ abstract public class EntityService<E extends Entity> {
     private final EntityDAO<E> entityDAO;
     private final Class type;
     private final String tableName;
-    private final AuthService authService;
+    private  AuthService authService;
 
     public EntityService(String tableName, Class type, AuthService authService){
         this.type = type;
@@ -18,6 +18,7 @@ abstract public class EntityService<E extends Entity> {
         this.authService = authService;
     }
 
+
     protected EntityDAO<E> getEntityDAO() {
         return entityDAO;
     }
@@ -28,6 +29,10 @@ abstract public class EntityService<E extends Entity> {
 
     public AuthService getAuthService() {
         return authService;
+    }
+
+    public void setAuthService(AuthService authService) {
+        this.authService = authService;
     }
 }
 

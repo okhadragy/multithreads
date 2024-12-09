@@ -9,7 +9,7 @@ public class Admin extends User {
     }
 
     public Admin(Admin admin) {
-        this(admin.getUsername(), admin.getPassword(), admin.getDateOfBirth(), admin.getRole(), admin.workingHours);
+        this(admin.getUsername(), admin.getPassword(), admin.getDateOfBirth(), admin.getRole(), admin.workingHours);  
     }
 
     public int getWorkingHours() {

@@ -1,13 +1,31 @@
 package Services;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 import Entity.*;
 public class AuthService{
     private User loggedInUser;
+    private CustomerService customerService;
+    private AdminService adminService;
 
-    public AuthService(){
-        
+    public AuthService(CustomerService customerService, AdminService adminService){
+        this.adminService = adminService;
+        this.customerService = customerService;
+    }
+
+    public AdminService getAdminService() {
+        return adminService;
+    }
+
+    public void setAdminService(AdminService adminService) {
+        this.adminService = adminService;
+    }
+
+    public CustomerService getCustomerService() {
+        return customerService;
+    }
+
+    public void setCustomerService(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     public boolean Login(String username, String password){
@@ -18,25 +36,24 @@ public class AuthService{
         if (username==null || password==null) {
             return false;
         }
-        EntityDAO<Customer> customerDAO = new EntityDAO<>("customers", Customer.class);
-        EntityDAO<Admin> adminDAO = new EntityDAO<>("admins", Admin.class);
 
-        int i = customerDAO.getIndex(username);
-        if (i !=-1) {
-            if (customerDAO.getAll().get(i).checkPassword(password)) {
-                loggedInUser = new Customer(customerDAO.getAll().get(i));
+        loggedInUser = customerService.get(username);
+
+        if (loggedInUser !=null) {
+            if (loggedInUser.checkPassword(password)) {
                 return true;
             }else{
+                loggedInUser = null;
                 return false;
             }
         }
 
-        i = adminDAO.getIndex(username);
-        if (i !=-1) {
-            if (adminDAO.getAll().get(i).checkPassword(password)) {
-                loggedInUser = new Admin(adminDAO.getAll().get(i));
+        loggedInUser = adminService.get(username);
+        if (loggedInUser !=null) {
+            if (loggedInUser.checkPassword(password)) {
                 return true;
             }else{
+                loggedInUser = null;
                 return false;
             }
         }
@@ -53,20 +70,13 @@ public class AuthService{
             return false;
         }
 
-        EntityDAO<Customer> customerDAO = new EntityDAO<>("customers", Customer.class);
-        EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
-
-        if (customerDAO.getIndex(username)!=-1) {
+        if (customerService.get(username)!=null) {
             return false;
         }
 
         try {
-            String cartId = orderDAO.nextId();
-            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);
-            Order cart = new Order(cartId, username, new HashMap<>(), balance, null, Status.draft);
-            customerDAO.add(user);
-            orderDAO.add(cart);
-            loggedInUser = user;
+            customerService.create(username, password, dateOfBirth, balance, address, gender);
+            loggedInUser = customerService.get(username);
             return true;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

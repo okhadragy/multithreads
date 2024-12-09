@@ -44,8 +44,12 @@ public class PermissionService extends EntityService<Permisson>{
         if (action==null||action.trim().isEmpty()) {
             throw new IllegalArgumentException("Action cannot be null or empty.");
         }
+        Permisson permisson =  getEntityDAO().get(role);
+        if (permisson == null) {
+            throw new IllegalArgumentException("this permisson doesn't exist.");
+        }
 
-        ArrayList<String> allowedActions = getEntityDAO().get(role).getActions();
+        ArrayList<String> allowedActions = permisson.getActions();
         if (allowedActions == null) return false;
 
         for (String allowedAction : allowedActions) {
@@ -69,12 +73,13 @@ public class PermissionService extends EntityService<Permisson>{
         return hasPermission(role, action);
     }
 
-    public void create(Role role, ArrayList<String> actions) throws RuntimeException{
+    public Role create(Role role, ArrayList<String> actions) throws RuntimeException{
         if (getLoggedInUser() == null) {
             throw new RuntimeException("Login first to do this action");
         }
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             getEntityDAO().add(new Permisson(role, actions));
+            return role;
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -102,6 +107,9 @@ public class PermissionService extends EntityService<Permisson>{
 
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             Permisson permisson = getEntityDAO().get(role);
+            if (permisson == null) {
+                throw new IllegalArgumentException("this permisson doesn't exist.");
+            }
             permisson.getActions().add(action);
             getEntityDAO().update(permisson);
         }else{
@@ -120,6 +128,9 @@ public class PermissionService extends EntityService<Permisson>{
 
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             Permisson permisson = getEntityDAO().get(role);
+            if (permisson == null) {
+                throw new IllegalArgumentException("this permisson doesn't exist.");
+            }
             permisson.setActions(actions);
             getEntityDAO().update(permisson);
         }else{
@@ -138,6 +149,9 @@ public class PermissionService extends EntityService<Permisson>{
         
         if (getLoggedInUser().getRole().equals(Role.superadmin)) {
             Permisson permisson = getEntityDAO().get(role);
+            if (permisson == null) {
+                throw new IllegalArgumentException("this permisson doesn't exist.");
+            }
             permisson.getActions().remove(action);
             getEntityDAO().update(permisson);
         }else{

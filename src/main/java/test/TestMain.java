@@ -9,13 +9,16 @@ import Services.*;
 
 public class TestMain {
     public static void main(String[] args) {
-        AuthService auth = new AuthService();
+        AuthService auth = new AuthService(null,null);
         PermissionService permission = new PermissionService(auth);
         AdminService adminService = new AdminService(auth,permission);
         CategoryService categoryService = new CategoryService(auth,permission);
         ProductService productService = new ProductService(auth,permission,categoryService);
-        CustomerService customerService = new CustomerService(auth,permission,productService);
-        OrderService orderService = new OrderService(auth,permission,productService);
+        CustomerService customerService = new CustomerService(auth,permission,productService,null);
+        OrderService orderService = new OrderService(auth,permission,productService,customerService);
+        auth.setCustomerService(customerService);
+        auth.setAdminService(adminService);
+        customerService.setOrderService(orderService);
         
 
         Scanner i = new Scanner(System.in);
@@ -27,16 +30,9 @@ public class TestMain {
             pass = i.nextLine();
         } while (!auth.Login(username, pass));
 
-        System.out.println(auth.getLoggedInUser());
-        System.out.println(adminService.get(username));
-        System.out.println(customerService.getAll());
-        customerService.addInterest("omar", "1");
-        customerService.addInterest("omar", "2");
-        productService.create("jacket", "ioijoijo", null, 70, null);
-        customerService.addInterest("omar", "3");
         customerService.addToCart("omar", "1");
         orderService.convertToOrder(customerService.get("omar").getCartId());
-        orderService.pay("3", PaymentMethod.bank);
+        orderService.pay("4", PaymentMethod.bank);
         System.out.println(orderService.getAll());
     }
 }

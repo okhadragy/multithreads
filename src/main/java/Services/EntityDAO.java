@@ -55,7 +55,7 @@ final class EntityDAO<E extends Entity> {
                 return e;
             }
         }
-        throw new RuntimeException("Entity doesn't Exist");
+        return null;
     }
 
     public int getIndex(Object key){
