@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import Entity.*;
 
 public class AdminService extends EntityService<Admin>{    
-    private PermissionService permission;
+    private final PermissionService permission;
 
-    public AdminService(AuthService authService){
+    public AdminService(AuthService authService, PermissionService permission){
         super("admins", Admin.class, authService);
-        permission = new PermissionService(authService);
+        this.permission = permission;
     }
 
     public void create(String username, String password, java.util.Date dateOfBirth, Role role, int workingHours){
@@ -49,6 +49,7 @@ public class AdminService extends EntityService<Admin>{
     }
 
     public ArrayList<Admin> getAll(){
+        System.out.println(permission.getServiceActionName("admins", "retrieve"));
         if (permission.hasPermission("admins","retrieve")) {
             return getEntityDAO().getAll();
         }else{

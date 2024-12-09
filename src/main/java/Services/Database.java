@@ -53,7 +53,12 @@ final class Database<E extends Entity> {
         }
 
         try (Reader reader = new FileReader(file_path)) {
-            return gson.fromJson(reader, TypeToken.getParameterized(ArrayList.class, type).getType());
+            ArrayList<E> a = gson.fromJson(reader, TypeToken.getParameterized(ArrayList.class, type).getType());
+            if (a==null) {
+                return new ArrayList<>();
+            }else{
+                return a;
+            }
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (IOException e) {

@@ -4,15 +4,10 @@ import java.util.HashMap;
 
 import Entity.*;
 public class AuthService{
-    private final EntityDAO<Customer> customerDAO;
-    private final EntityDAO<Admin> adminDAO;
-    private final EntityDAO<Order> orderDAO;
     private User loggedInUser;
 
     public AuthService(){
-        customerDAO = new EntityDAO<>("customers", Customer.class);
-        adminDAO = new EntityDAO<>("admins", Admin.class);
-        orderDAO = new EntityDAO<>("orders", Order.class);
+        
     }
 
     public boolean Login(String username, String password){
@@ -23,6 +18,8 @@ public class AuthService{
         if (username==null || password==null) {
             return false;
         }
+        EntityDAO<Customer> customerDAO = new EntityDAO<>("customers", Customer.class);
+        EntityDAO<Admin> adminDAO = new EntityDAO<>("admins", Admin.class);
 
         int i = customerDAO.getIndex(username);
         if (i !=-1) {
@@ -56,19 +53,23 @@ public class AuthService{
             return false;
         }
 
+        EntityDAO<Customer> customerDAO = new EntityDAO<>("customers", Customer.class);
+        EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
+
         if (customerDAO.getIndex(username)!=-1) {
             return false;
         }
 
         try {
             String cartId = orderDAO.nextId();
+            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);
             Order cart = new Order(cartId, username, new HashMap<>(), balance, null, Status.draft);
-            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);    
             customerDAO.add(user);
             orderDAO.add(cart);
             loggedInUser = user;
             return true;
         } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return false;
         } catch (Exception e) {
             return false;

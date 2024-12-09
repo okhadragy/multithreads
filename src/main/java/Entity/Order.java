@@ -83,7 +83,7 @@ public class Order implements Entity {
             }
         }
 
-        this.products = products;
+        this.products = new HashMap<>(products);
     }
 
     public double getTotal() {

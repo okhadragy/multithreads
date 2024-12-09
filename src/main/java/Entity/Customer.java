@@ -8,11 +8,9 @@ public class Customer extends User {
     private Gender gender;
     private ArrayList<String> interests;
     private String cartId;
-    private String password;
     
     public Customer(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender, ArrayList<String> interests, String cartId){
         super(username, password, Role.customer, dateOfBirth);
-        this.password = password;
         setBalance(balance);
         setGender(gender);
         setInterests(interests);
@@ -20,7 +18,7 @@ public class Customer extends User {
     }
 
     public Customer(Customer customer) {
-        this(customer.getUsername(), customer.password, customer.getDateOfBirth(), customer.balance, customer.address, customer.gender, customer.interests,customer.cartId);
+        this(customer.getUsername(), customer.getPassword(), customer.getDateOfBirth(), customer.balance, customer.address, customer.gender, customer.interests,customer.cartId);
     }
 
     public double getBalance() {
@@ -71,7 +69,7 @@ public class Customer extends User {
             }
         }
 
-        this.interests = interests;
+        this.interests = new ArrayList<>(interests);
     }
 
     public String getCartId() {

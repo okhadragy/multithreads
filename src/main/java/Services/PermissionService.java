@@ -19,7 +19,7 @@ public class PermissionService extends EntityService<Permisson>{
             throw new IllegalArgumentException("Action cannot be null or empty.");
         }
 
-        return tableName.toUpperCase()+"_"+action.toUpperCase();
+        return tableName.toLowerCase()+"_"+action.toLowerCase();
     }
 
     public boolean hasPermission(String tableName ,String action){
@@ -49,7 +49,7 @@ public class PermissionService extends EntityService<Permisson>{
         if (allowedActions == null) return false;
 
         for (String allowedAction : allowedActions) {
-            if (allowedAction.equals(action)) {
+            if (allowedAction.equals(action.toLowerCase())) {
                 return true;
             }
         }

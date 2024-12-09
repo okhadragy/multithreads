@@ -5,15 +5,13 @@ import Entity.*;
 
 
 public class CustomerService extends EntityService<Customer> {
-    private PermissionService permission;
-    private final EntityDAO<Order> orderDAO;
-    private final EntityDAO<Product> productDAO;
+    private final PermissionService permission;
+    private final ProductService productService;
 
-    public CustomerService(AuthService authService) {
+    public CustomerService(AuthService authService, PermissionService permission, ProductService productService) {
         super("customers", Customer.class, authService);
-        permission = new PermissionService(authService);
-        orderDAO = new EntityDAO<>("orders", Order.class);
-        productDAO = new EntityDAO<>("products", Product.class);
+        this.permission = permission;
+        this.productService = productService;
     }
 
     public void create(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender) {        
@@ -22,6 +20,7 @@ public class CustomerService extends EntityService<Customer> {
                 throw new IllegalArgumentException("This username is used");
             }
 
+            EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
             String cartId = orderDAO.nextId();
             Order cart = new Order(cartId, username, new HashMap<>(), balance, null, Status.draft);
             Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>(),cartId);    
@@ -35,6 +34,7 @@ public class CustomerService extends EntityService<Customer> {
     public void delete(String username) {
         if (permission.hasPermission("customers", "delete")) {
             Customer customer = getEntityDAO().get(username);
+            EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
             this.getEntityDAO().delete(username);
             orderDAO.delete(customer.getCartId());
         }else{
@@ -82,8 +82,9 @@ public class CustomerService extends EntityService<Customer> {
 
     public void addToCart(String username, String productId){
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
-            Product product = productDAO.get(productId);
+            productService.get(productId);
             Customer customer = getEntityDAO().get(username);
+            EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
             Order cart = orderDAO.get(customer.getCartId());
             cart.addProduct(productId);
             orderDAO.update(cart);
@@ -94,8 +95,9 @@ public class CustomerService extends EntityService<Customer> {
 
     public void removeFromCart(String username, String productId){
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
-            Product product = productDAO.get(productId);
+            productService.get(productId);
             Customer customer = getEntityDAO().get(username);
+            EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
             Order cart = orderDAO.get(customer.getCartId());
             cart.removeProduct(productId);
             orderDAO.update(cart);
@@ -107,6 +109,7 @@ public class CustomerService extends EntityService<Customer> {
     public Map<String, Integer> getCartProducts(String username){
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
             Customer customer = getEntityDAO().get(username);
+            EntityDAO<Order> orderDAO = new EntityDAO<>("orders", Order.class);
             Order cart = orderDAO.get(customer.getCartId());
             return cart.getProducts();
         }else{
@@ -116,9 +119,12 @@ public class CustomerService extends EntityService<Customer> {
 
     public void addInterest(String username, String productId){
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
-            Product product = productDAO.get(productId);
+            productService.get(productId);
             Customer customer = getEntityDAO().get(username);
             ArrayList<String> products = customer.getInterests();
+            if (products.contains(productId)) {
+                throw new RuntimeException("This product is already in interests");
+            }
             products.add(productId);
             customer.setInterests(products);
             getEntityDAO().update(customer);
@@ -129,7 +135,7 @@ public class CustomerService extends EntityService<Customer> {
 
     public void removeInterest(String username, String productId){
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
-            Product product = productDAO.get(productId);
+            productService.get(productId);
             Customer customer = getEntityDAO().get(username);
             ArrayList<String> products = customer.getInterests();
             products.remove(productId);

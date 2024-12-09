@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import Entity.*;
 
 public class CategoryService extends EntityService<Category> {
-    private PermissionService permission;
+    private final PermissionService permission;
 
-    public CategoryService(AuthService authService){
+    public CategoryService(AuthService authService, PermissionService permission){
         super("categories",Category.class, authService);
-        permission = new PermissionService(authService);
+        this.permission = permission;
     }
 
     public void create(String name, String description) {

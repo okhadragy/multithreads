@@ -5,9 +5,10 @@
   <groupId>Entity</groupId>
   <artifactId>Multithreads</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Multithreads</name>
   <url>http://maven.apache.org</url>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -21,13 +22,27 @@
       <version>2.11.0</version>
     </dependency>
   </dependencies>
-  
+
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.0</version> 
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>test.TestMain</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
       </resource>
-  </resources>
+    </resources>
   </build>
-  
+
 </project>

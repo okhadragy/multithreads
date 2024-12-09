@@ -5,15 +5,21 @@ import java.util.ArrayList;
 import Entity.*;
 
 public class ProductService extends EntityService<Product> {
-    private PermissionService permission;
+    private final PermissionService permission;
+    private final CategoryService categoryService;
 
-    public ProductService(AuthService authService){
+    public ProductService(AuthService authService, PermissionService permission, CategoryService categoryService){
         super("products",Product.class, authService);
-        permission = new PermissionService(authService);
+        this.permission = permission;
+        this.categoryService = categoryService;
     }
 
     public void create(String name, String desc, String image, double price, String categoryId) {
         if (permission.hasPermission("products", "create")) {
+            if (categoryId !=null) {
+                categoryService.get(categoryId);
+            }
+            
             getEntityDAO().add(new Product(getEntityDAO().nextId(), name, desc, image, price, categoryId));
         } else {
             throw new RuntimeException("You don't have the permisson to do this action");
@@ -69,6 +75,9 @@ public class ProductService extends EntityService<Product> {
                     product.setDescription((String)newData);
                     break;
                 case "category":
+                    if ((String)newData!=null) {
+                        categoryService.get((String)newData);
+                    }
                     product.setCategoryId((String)newData);
                     break;
                 case "image":

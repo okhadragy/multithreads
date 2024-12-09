@@ -24,10 +24,14 @@ public abstract class User implements Entity {
            throw new IllegalArgumentException("Username must be between 3 and 20 characters.");
        }
        this.username = username;
-   }
+    }
 
     public boolean checkPassword(String password){
         return (this.password).equals(password);
+    }
+
+    protected String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {

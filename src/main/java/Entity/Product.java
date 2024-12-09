@@ -82,9 +82,12 @@ public class Product implements Entity, Comparable<Product> {
     }
 
     public void setCategoryId(String categoryId) {
-        if (categoryId.trim().isEmpty()) {
-            throw new IllegalArgumentException("Category Id cannot be Empty.");
+        if (categoryId != null) {
+            if (categoryId.trim().isEmpty()) {
+                throw new IllegalArgumentException("Category Id cannot be Empty.");
+            }
         }
+        
         this.categoryId = categoryId;
     }
 
