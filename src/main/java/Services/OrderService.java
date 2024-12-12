@@ -115,6 +115,31 @@ public class OrderService extends EntityService<Order> {
         }
     }
 
+    public <T> ArrayList<Order> filter(String paramater, T data){
+        if (permission.hasPermission("orders","retrieve")) {
+            ArrayList<Order> orders = new ArrayList<>();
+            if (!(paramater.toLowerCase() == "customer" && paramater.toLowerCase()=="product" && paramater.toLowerCase()=="paymentmethod" && paramater.toLowerCase()=="status")) {
+                throw new IllegalArgumentException("This parameter doesn't exist");
+            }
+
+            for (Order order : getEntityDAO().getAll()) {
+                if (order.getCustomer().equals(data) && paramater.toLowerCase()=="customer") {
+                    orders.add(order);
+                }else if (order.getProducts().containsKey(data) && paramater.toLowerCase()=="product") {
+                    orders.add(order);
+                }else if (order.getPaymentMethod().equals(data) && paramater.toLowerCase()=="paymentmethod") {
+                    orders.add(order);
+                }else if (order.getStatus().equals(data) && paramater.toLowerCase()=="status") {
+                    orders.add(order);
+                }
+            }
+            return orders;
+
+        }else{
+            throw new RuntimeException("You don't have the permisson to do this action");
+        }
+    }
+
     public ArrayList<Order> getAll(){
         if (permission.hasPermission("orders","retrieve")) {
             return getEntityDAO().getAll();

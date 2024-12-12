@@ -1,4 +1,5 @@
 package Services;
+import java.net.*;
 import java.util.ArrayList;
 
 import Entity.*;
@@ -20,12 +21,12 @@ public class AdminService extends EntityService<Admin>{
         this.permission = permission;
     }
 
-    public String create(String username, String password, java.util.Date dateOfBirth, Role role, int workingHours){
+    public String create(String username, String password, Role role, java.util.Date dateOfBirth, ArrayList<InetAddress> hostAddresses, int workingHours){
         if (permission.hasPermission("admins","create")) {
             if (getEntityDAO().getIndex(username)!=-1) {
                 throw new IllegalArgumentException("This username is used");
             }
-            getEntityDAO().add(new Admin(username, password, dateOfBirth, role, workingHours));
+            getEntityDAO().add(new Admin(username, password, role, dateOfBirth, hostAddresses, workingHours));
             return username;
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
@@ -107,6 +108,32 @@ public class AdminService extends EntityService<Admin>{
                     throw new IllegalArgumentException("This parameter doesn't exist");
             }
             getEntityDAO().update(user);
+        }else{
+            throw new RuntimeException("You don't have the permisson to do this action");
+        }
+    }
+
+    public void addHostAddress(String username, InetAddress hostAddress){
+        if (permission.hasPermission("admins", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
+            Admin admin = getEntityDAO().get(username);
+            if (admin == null) {
+                throw new IllegalArgumentException("This admin doesn't exist.");  
+            }
+            admin.addHostAddress(hostAddress);
+            getEntityDAO().update(admin);
+        }else{
+            throw new RuntimeException("You don't have the permisson to do this action");
+        }
+    }
+
+    public void removeHostAddress(String username, InetAddress hostAddress){
+        if (permission.hasPermission("admins", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
+            Admin admin = getEntityDAO().get(username);
+            if (admin == null) {
+                throw new IllegalArgumentException("This admin doesn't exist.");  
+            }
+            admin.removeHostAddress(hostAddress);
+            getEntityDAO().update(admin);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
         }

@@ -1,15 +1,20 @@
 package Entity;
+import java.net.*;
+import java.util.ArrayList;
+
 public abstract class User implements Entity {
     private String username;
     private String password;
     private Role role;
     private java.util.Date dateOfBirth;
+    private ArrayList<InetAddress> hostAddresses;
 
-    public User(String username, String password,Role role ,java.util.Date dateOfBirth){
+    public User(String username, String password,Role role,java.util.Date dateOfBirth, ArrayList<InetAddress> hostAddresses){
         setUsername(username);
         setPassword(password);
         setRole(role);
         setDateOfBirth(dateOfBirth);
+        setHostAddresses(hostAddresses);
     }
 
     public String getUsername() {
@@ -60,14 +65,60 @@ public abstract class User implements Entity {
     }
 
     public void setDateOfBirth(java.util.Date dateOfBirth) {
-         if (dateOfBirth == null) {
+        if (dateOfBirth == null) {
             throw new IllegalArgumentException("Date of birth cannot be null.");
         }
+        
         java.util.Date today = new java.util.Date();
         if (dateOfBirth.after(today)) {
             throw new IllegalArgumentException("Date of birth cannot be in the future.");
         }
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public ArrayList<InetAddress> getHostAddresses() {
+        return new ArrayList<>(hostAddresses);
+    }
+
+    public void setHostAddresses(ArrayList<InetAddress> hostAddresses) {
+        if (hostAddresses == null) {
+            throw new IllegalArgumentException("Host Addresses cannot be null.");
+        }
+
+        if (hostAddresses.isEmpty()) {
+            throw new IllegalArgumentException("Host Addresses cannot be empty.");
+        }
+
+        for (InetAddress hostAddress : hostAddresses) {
+            if (hostAddress == null) {
+                throw new IllegalArgumentException("Host Address cannot be null.");
+            }
+        }
+
+        this.hostAddresses = hostAddresses;
+    }
+
+    public void addHostAddress(InetAddress hostAddress){
+        if (hostAddress == null) {
+            throw new IllegalArgumentException("Host Address cannot be null.");
+        }
+
+        if (hostAddresses.contains(hostAddress)) {
+            return;
+        }
+
+        hostAddresses.add(hostAddress);
+    }
+    
+    public void removeHostAddress(InetAddress hostAddress){
+        if (hostAddress == null) {
+            throw new IllegalArgumentException("Host Address cannot be null.");
+        }
+        if (!hostAddresses.contains(hostAddress)) {
+            throw new IllegalArgumentException("This Host Address is not in your addresses.");
+        }
+
+        hostAddresses.remove(hostAddress);
     }
 
     @Override

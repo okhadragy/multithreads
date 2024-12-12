@@ -1,15 +1,18 @@
 package Entity;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
+
 public class Admin extends User {
     private int workingHours;
 
-    public Admin(String username, String password, java.util.Date dateOfBirth, Role role, int workingHours) {
-        super(username, password, role, dateOfBirth);
+    public Admin(String username, String password, Role role, java.util.Date dateOfBirth, ArrayList<InetAddress> hostAddresses, int workingHours) {
+        super(username, password, role, dateOfBirth, hostAddresses);
         setWorkingHours(workingHours);
     }
 
     public Admin(Admin admin) {
-        this(admin.getUsername(), admin.getPassword(), admin.getDateOfBirth(), admin.getRole(), admin.workingHours);  
+        this(admin.getUsername(), admin.getPassword(), admin.getRole(), admin.getDateOfBirth(), admin.getHostAddresses(), admin.workingHours);  
     }
 
     public int getWorkingHours() {

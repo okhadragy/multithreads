@@ -1,6 +1,9 @@
 package Services;
 
 
+import java.net.InetAddress;
+import java.util.ArrayList;
+
 import Entity.*;
 public class AuthService{
     private User loggedInUser;
@@ -28,7 +31,7 @@ public class AuthService{
         this.customerService = customerService;
     }
 
-    public boolean Login(String username, String password){
+    public boolean Login(String username, String password, InetAddress hostAddresses){
         if (loggedInUser!=null) {
             return false;
         }
@@ -41,6 +44,7 @@ public class AuthService{
 
         if (loggedInUser !=null) {
             if (loggedInUser.checkPassword(password)) {
+                loggedInUser.addHostAddress(hostAddresses);
                 return true;
             }else{
                 loggedInUser = null;
@@ -51,6 +55,7 @@ public class AuthService{
         loggedInUser = adminService.get(username);
         if (loggedInUser !=null) {
             if (loggedInUser.checkPassword(password)) {
+                loggedInUser.addHostAddress(hostAddresses);
                 return true;
             }else{
                 loggedInUser = null;
@@ -65,7 +70,7 @@ public class AuthService{
         loggedInUser = null;
     }
 
-    public boolean Signup(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender){
+    public boolean Signup(String username, String password, java.util.Date dateOfBirth, InetAddress hostAddresses, String address, Gender gender){
         if (loggedInUser!=null) {
             return false;
         }
@@ -75,7 +80,9 @@ public class AuthService{
         }
 
         try {
-            customerService.create(username, password, dateOfBirth, balance, address, gender);
+            ArrayList<InetAddress> hosts = new ArrayList<>();
+            hosts.add(hostAddresses);
+            customerService.create(username, password, dateOfBirth, hosts, 0, address, gender);
             loggedInUser = customerService.get(username);
             return true;
         } catch (IllegalArgumentException e) {
