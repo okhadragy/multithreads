@@ -137,6 +137,5 @@ public class ChatService extends EntityService<Message>{
             throw new RuntimeException("You don't have the permisson to do this action");
         }
     }
-
     
 }
