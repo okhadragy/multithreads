@@ -26,7 +26,7 @@ class ClientHandler extends Thread {
         {
             String clientMessage;
             while ((clientMessage = in.readLine()) != null) {
-                System.out.println("Received from client "+clientSocket.getPort()+": " + clientMessage);
+                System.out.println("Received from client ("+clientSocket.getInetAddress()+","+clientSocket.getPort()+"): " + clientMessage);
                 String[] parts = clientMessage.split("\u0001", 2);
                 String from = parts[0].trim();
                 String content = parts[1].trim();
