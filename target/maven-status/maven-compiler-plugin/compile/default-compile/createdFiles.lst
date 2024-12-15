@@ -1,5 +1,4 @@
 Services\PermissionService.class
-test\TestMain.class
 gui\OrdersPage.class
 gui\LoginPage.class
 gui\Central.class

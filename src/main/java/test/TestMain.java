@@ -1,4 +1,5 @@
 package test;
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -23,12 +24,17 @@ public class TestMain {
 
         Scanner i = new Scanner(System.in);
         String username, pass;
-        do {
-            System.out.print("Enter Username: ");
-            username = i.nextLine();
-            System.out.print("Enter Password: ");
-            pass = i.nextLine();
-        } while (!auth.Login(username, pass));
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            do {
+                System.out.print("Enter Username: ");
+                username = i.nextLine();
+                System.out.print("Enter Password: ");
+                pass = i.nextLine();
+            } while (!auth.Login(username, pass,inetAddress));
+        } catch (Exception e) {
+        }
+        
 
         customerService.addToCart("omar", "1");
         orderService.convertToOrder(customerService.get("omar").getCartId());

@@ -77,6 +77,9 @@ public abstract class User implements Entity {
     }
 
     public ArrayList<InetAddress> getHostAddresses() {
+        if (hostAddresses == null) {
+            return new ArrayList<>();
+        }
         return new ArrayList<>(hostAddresses);
     }
 

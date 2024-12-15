@@ -1,5 +1,6 @@
 package gui;
 
+import java.net.InetAddress;
 import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
@@ -70,10 +71,17 @@ public class LoginPage {
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            if (username.equals("admin") && password.equals("1234")) { // CHECK IN DATABASE
-                mainApp.showCategoryPage();
-            } else { // ERROR
-                warning.setText("Invalid Credentials");
+
+            try {
+                InetAddress inetAddress = InetAddress.getLocalHost();
+                if (mainApp.getAuth().Login(username, password, inetAddress)) {
+                    mainApp.showCategoryPage();
+                } else {
+                    warning.setText("Invalid Credentials");
+                }
+            } catch (Exception err) {
+                System.out.println("Unable to determine host IP address.");
+                err.printStackTrace();
             }
         });
 
