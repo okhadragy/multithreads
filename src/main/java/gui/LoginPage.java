@@ -1,6 +1,8 @@
 package gui;
 
 import java.net.InetAddress;
+
+import Entity.Admin;
 import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
@@ -79,7 +81,12 @@ public class LoginPage {
             }
 
             if (mainApp.getAuth().Login(username, password, inetAddress)) {
-                mainApp.showCategoryPage();
+                if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
+                    mainApp.showAdminCategoriesPage();
+                }else{
+                    mainApp.showCategoryPage();
+                }
+                
             } else {
                 warning.setText("Invalid Credentials");
             }

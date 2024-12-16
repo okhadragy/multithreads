@@ -68,7 +68,7 @@ public class RegisterPage {
         RadioButton femaleRadio = new RadioButton("Female");
         femaleRadio.setToggleGroup(genderGroup);
         femaleRadio.setStyle("-fx-text-fill: white;");
-        maleRadio.setUserData(Gender.female);
+        femaleRadio.setUserData(Gender.female);
 
         HBox genderBox = new HBox(10, maleRadio, femaleRadio);
         genderBox.setAlignment(Pos.CENTER_LEFT);
@@ -136,16 +136,14 @@ public class RegisterPage {
             } catch (Exception err) {
                 inetAddress = InetAddress.getLoopbackAddress();
             }
-            mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, inetAddress, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
-            mainApp.showCategoryPage();
-            /*
+            
             try {
                 mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, inetAddress, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
                 mainApp.showCategoryPage();
             } catch (Exception err) {
                 validationWarning.setText(err.getMessage());
                 return;
-            }*/
+            }
         });
 
         Button loginButton = new Button("Already have an account? Log in instead!");

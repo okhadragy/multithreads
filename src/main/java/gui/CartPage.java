@@ -97,6 +97,7 @@ public class CartPage {
 
         logoView.setCursor(Cursor.HAND);
         logoView.setOnMouseClicked(event -> {
+            mainApp.getAuth().Logout();
             mainApp.showLoginPage();
         });
 
