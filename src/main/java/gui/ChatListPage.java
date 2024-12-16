@@ -1,10 +1,8 @@
 package gui;
 
 import java.util.Stack;
-
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -15,11 +13,11 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.*;
 
-public class AdminUsersPage {
+public class ChatListPage {
 
     private final Central mainApp;
 
-    public AdminUsersPage(Central mainApp) {
+    public ChatListPage(Central mainApp) {
         this.mainApp = mainApp;
     }
 
@@ -43,9 +41,9 @@ public class AdminUsersPage {
         logoView.setFitWidth(85);
         logoView.setPreserveRatio(true);
 
-        Text usersButton = new Text("USERS");
-        usersButton.setFill(Color.WHITE);
-        usersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Text cartButton = new Text("CART");
+        cartButton.setFill(Color.WHITE);
+        cartButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         Text productButton = new Text("PRODUCTS");
         productButton.setFill(Color.WHITE);
@@ -65,8 +63,8 @@ public class AdminUsersPage {
 
         HBox controlBox = new HBox(40);
         controlBox.setAlignment(Pos.CENTER);
-        controlBox.getChildren().addAll(productButton, categoryButton, usersButton, ordersButton);
-
+        controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton);
+        
         HBox navbar = new HBox(50);
         navbar.getChildren().addAll(logoView, controlBox);
         navbar.setStyle("-fx-background-color: black;");
@@ -82,22 +80,22 @@ public class AdminUsersPage {
 
         productButton.setCursor(Cursor.HAND);
         productButton.setOnMouseClicked(event -> {
-            mainApp.showAdminProductsPage();
+            mainApp.showProductPage();
         });
 
         categoryButton.setCursor(Cursor.HAND);
         categoryButton.setOnMouseClicked(event -> {
-            mainApp.showAdminCategoriesPage();
+            mainApp.showCategoryPage();
         });
 
-        usersButton.setCursor(Cursor.HAND);
-        usersButton.setOnMouseClicked(event -> {
-            mainApp.showAdminUsersPage();
+        cartButton.setCursor(Cursor.HAND);
+        cartButton.setOnMouseClicked(event -> {
+            mainApp.showCartPage();
         });
 
         ordersButton.setCursor(Cursor.HAND);
         ordersButton.setOnMouseClicked(event -> {
-            mainApp.showAdminOrdersPage();
+            mainApp.showOrdersPage();
         });
 
         chatButton.setCursor(Cursor.HAND);
@@ -111,13 +109,59 @@ public class AdminUsersPage {
             mainApp.showLoginPage();
         });
 
-        // content
+    // content
+    VBox mainLayout = new VBox(10);
+    mainLayout.setAlignment(Pos.TOP_CENTER);
 
-        
-
-        // bp.setCenter(tableView);
-
-        return new Scene(sp, 1366, 768);
-
+    // SAMPLE, USE THE DATABASE HERE PLS
+    for (int i = 0; i < 10; i++) {
+        String role = (i % 2 == 0) ? "Admin" : "Customer";  // Alternate between Admin and Customer
+        HBox listing = createListing("User" + (i + 1), role);
+        mainLayout.getChildren().addAll(listing, new Separator());
     }
+
+    bp.setCenter(mainLayout);
+
+    return new Scene(sp, 1366, 768);
+}
+
+private HBox createListing(String username, String role) {
+    Text usernameLabel = new Text(username);
+    usernameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+    usernameLabel.setStyle("-fx-fill: white");
+
+    Text roleLabel = new Text(role);
+    roleLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+    roleLabel.setStyle("-fx-fill: #006fff");
+
+    // username and role vbox
+    VBox userBox = new VBox(5, usernameLabel, roleLabel);
+    userBox.setAlignment(Pos.CENTER_LEFT);
+    userBox.setStyle("-fx-padding: 10px; -fx-border-radius: 10px;");
+
+    // entire listing
+    HBox listingBox = new HBox(10);
+    listingBox.setAlignment(Pos.CENTER_LEFT);
+    listingBox.setStyle("-fx-padding: 10px; -fx-background-color: black; -fx-border-radius: 10px;");
+    
+    // avatar
+    ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream("/assets/userIcon.png")));
+    HBox.setMargin(avatar, new Insets(0, 0, 0, 50));
+    avatar.setFitWidth(50);
+    avatar.setFitHeight(50);
+    
+    // add avatar and user box to the HBox
+    listingBox.getChildren().addAll(avatar, userBox);
+
+    listingBox.setOnMouseClicked(event -> mainApp.showChatPage());
+    // TRANSITION TO CHAT SCENE
+    
+    listingBox.setCursor(Cursor.HAND);
+
+    // change background color on hover
+    listingBox.setOnMouseEntered(event -> listingBox.setStyle("-fx-padding: 10px; -fx-background-color: #333; -fx-border-radius: 10px;"));
+    listingBox.setOnMouseExited(event -> listingBox.setStyle("-fx-padding: 10px; -fx-background-color: black; -fx-border-radius: 10px;"));
+
+    return listingBox;
+}
 }

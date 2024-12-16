@@ -48,6 +48,10 @@ public class SelectProductPage {
         ordersButton.setFill(Color.WHITE);
         ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        Text chatButton = new Text("CHAT");
+        ordersButton.setFill(Color.WHITE);
+        ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
         HBox controlBox = new HBox(40);
         controlBox.setAlignment(Pos.CENTER);
         controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton);
@@ -83,6 +87,11 @@ public class SelectProductPage {
         ordersButton.setCursor(Cursor.HAND);
         ordersButton.setOnMouseClicked(event -> {
             mainApp.showOrdersPage();
+        });
+
+        chatButton.setCursor(Cursor.HAND);
+        chatButton.setOnMouseClicked(event -> {
+            mainApp.showChatListPage();
         });
 
         logoView.setCursor(Cursor.HAND);

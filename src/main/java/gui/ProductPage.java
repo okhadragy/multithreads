@@ -58,7 +58,12 @@ public class ProductPage {
         Text categoryButton = new Text("CATEGORIES");
         categoryButton.setFill(Color.WHITE);
         categoryButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
         Text ordersButton = new Text("ORDERS");
+        ordersButton.setFill(Color.WHITE);
+        ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Text chatButton = new Text("CHAT");
         ordersButton.setFill(Color.WHITE);
         ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
@@ -94,6 +99,12 @@ public class ProductPage {
         ordersButton.setOnMouseClicked(event -> {
             mainApp.showOrdersPage();
         });
+
+        chatButton.setCursor(Cursor.HAND);
+        chatButton.setOnMouseClicked(event -> {
+            mainApp.showChatListPage();
+        });
+
         logoView.setCursor(Cursor.HAND);
         logoView.setOnMouseClicked(event -> {
             mainApp.getAuth().Logout();
