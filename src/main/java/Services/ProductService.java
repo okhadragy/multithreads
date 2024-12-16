@@ -73,6 +73,27 @@ public class ProductService extends EntityService<Product> {
         }
     }
 
+    public <T> ArrayList<Product> filter(String paramater, T data){
+        if (permission.hasPermission("products","retrieve")) {
+            ArrayList<Product> products = new ArrayList<>();
+            if (!(paramater.toLowerCase() == "name" && paramater.toLowerCase()=="categoryid")) {
+                throw new IllegalArgumentException("This parameter doesn't exist");
+            }
+
+            for (Product product : getEntityDAO().getAll()) {
+                if (product.getName().equals(data) && paramater.toLowerCase()=="name") {
+                    products.add(product);
+                }else if (product.getCategoryId().equals(data) && paramater.toLowerCase()=="categoryid") {
+                    products.add(product);
+                }
+            }
+            return products;
+
+        }else{
+            throw new RuntimeException("You don't have the permisson to do this action");
+        }
+    }
+
     public ArrayList<Product> getAll(){
         if (permission.hasPermission("products","retrieve")) {
             return getEntityDAO().getAll();
