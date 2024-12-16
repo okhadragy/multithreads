@@ -59,12 +59,12 @@ public class CartPage {
         ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         Text chatButton = new Text("CHAT");
-        ordersButton.setFill(Color.WHITE);
-        ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        chatButton.setFill(Color.WHITE);
+        chatButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         HBox controlBox = new HBox(40);
         controlBox.setAlignment(Pos.CENTER);
-        controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton);
+        controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton, chatButton);
 
         HBox navbar = new HBox(50);
         navbar.getChildren().addAll(logoView, controlBox);
