@@ -40,6 +40,7 @@ public class AuthService {
             return false;
         }
 
+        username = username.toLowerCase();
         loggedInUser = customerService.get(username);
 
         if (loggedInUser != null) {

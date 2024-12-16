@@ -12,6 +12,7 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.*;
+import Entity.*;
 
 public class ChatListPage {
 
@@ -45,6 +46,10 @@ public class ChatListPage {
         cartButton.setFill(Color.WHITE);
         cartButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        Text usersButton = new Text("USERS");
+        usersButton.setFill(Color.WHITE);
+        usersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
         Text productButton = new Text("PRODUCTS");
         productButton.setFill(Color.WHITE);
         productButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -63,7 +68,11 @@ public class ChatListPage {
 
         HBox controlBox = new HBox(40);
         controlBox.setAlignment(Pos.CENTER);
-        controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton, chatButton);
+        if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
+            controlBox.getChildren().addAll(productButton, categoryButton, usersButton, ordersButton, chatButton);
+        }else{
+            controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton, chatButton);
+        }
         
         HBox navbar = new HBox(50);
         navbar.getChildren().addAll(logoView, controlBox);
@@ -80,12 +89,20 @@ public class ChatListPage {
 
         productButton.setCursor(Cursor.HAND);
         productButton.setOnMouseClicked(event -> {
-            mainApp.showProductPage();
+            if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
+                mainApp.showAdminProductsPage();
+            }else{
+                mainApp.showProductPage();
+            } 
         });
 
         categoryButton.setCursor(Cursor.HAND);
         categoryButton.setOnMouseClicked(event -> {
-            mainApp.showCategoryPage();
+            if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
+                mainApp.showAdminCategoriesPage();
+            }else{
+                mainApp.showCategoryPage();
+            }
         });
 
         cartButton.setCursor(Cursor.HAND);
@@ -95,12 +112,21 @@ public class ChatListPage {
 
         ordersButton.setCursor(Cursor.HAND);
         ordersButton.setOnMouseClicked(event -> {
-            mainApp.showOrdersPage();
+            if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
+                mainApp.showAdminOrdersPage();
+            }else{
+                mainApp.showOrdersPage();
+            }
         });
 
         chatButton.setCursor(Cursor.HAND);
         chatButton.setOnMouseClicked(event -> {
             mainApp.showChatListPage();
+        });
+
+        usersButton.setCursor(Cursor.HAND);
+        usersButton.setOnMouseClicked(event -> {
+            mainApp.showAdminUsersPage();
         });
 
         logoView.setCursor(Cursor.HAND);

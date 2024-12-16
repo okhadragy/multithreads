@@ -28,7 +28,7 @@ public abstract class User implements Entity {
        if (username.length() < 3 || username.length() > 20) { 
            throw new IllegalArgumentException("Username must be between 3 and 20 characters.");
        }
-       this.username = username;
+       this.username = username.toLowerCase();
     }
 
     public boolean checkPassword(String password){
