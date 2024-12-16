@@ -71,17 +71,17 @@ public class LoginPage {
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-
-            try {
-                InetAddress inetAddress = InetAddress.getLocalHost();
-                if (mainApp.getAuth().Login(username, password, inetAddress)) {
-                    mainApp.showCategoryPage();
-                } else {
-                    warning.setText("Invalid Credentials");
-                }
+            InetAddress inetAddress;
+            try {                
+                inetAddress = InetAddress.getLocalHost();
             } catch (Exception err) {
-                System.out.println("Unable to determine host IP address.");
-                err.printStackTrace();
+                inetAddress = InetAddress.getLoopbackAddress();
+            }
+
+            if (mainApp.getAuth().Login(username, password, inetAddress)) {
+                mainApp.showCategoryPage();
+            } else {
+                warning.setText("Invalid Credentials");
             }
         });
 

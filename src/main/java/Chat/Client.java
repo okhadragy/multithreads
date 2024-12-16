@@ -21,7 +21,7 @@ public class Client {
         PrintWriter out = null;
         try
         {
-            this.socket = new Socket(host, port);
+            this.socket = new Socket(host.getHostAddress(), port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
             out.println(chatService.getLoggedInUser().getUsername()+"\u0001"+userMessage);

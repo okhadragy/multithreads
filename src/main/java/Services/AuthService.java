@@ -1,16 +1,16 @@
 package Services;
 
-
 import java.net.InetAddress;
 import java.util.ArrayList;
 
 import Entity.*;
-public class AuthService{
+
+public class AuthService {
     private User loggedInUser;
     private CustomerService customerService;
     private AdminService adminService;
 
-    public AuthService(CustomerService customerService, AdminService adminService){
+    public AuthService(CustomerService customerService, AdminService adminService) {
         this.adminService = adminService;
         this.customerService = customerService;
     }
@@ -31,66 +31,54 @@ public class AuthService{
         this.customerService = customerService;
     }
 
-    public boolean Login(String username, String password, InetAddress hostAddresses){
-        if (loggedInUser!=null) {
+    public boolean Login(String username, String password, InetAddress hostAddresses) {
+        if (loggedInUser != null) {
             return false;
         }
 
-        if (username==null || password==null) {
+        if (username == null || password == null) {
             return false;
         }
 
         loggedInUser = customerService.get(username);
 
-        if (loggedInUser !=null) {
+        if (loggedInUser != null) {
             if (loggedInUser.checkPassword(password)) {
                 loggedInUser.addHostAddress(hostAddresses);
                 return true;
-            }else{
+            } else {
                 loggedInUser = null;
                 return false;
             }
         }
 
         loggedInUser = adminService.get(username);
-        if (loggedInUser !=null) {
+        if (loggedInUser != null) {
             if (loggedInUser.checkPassword(password)) {
                 loggedInUser.addHostAddress(hostAddresses);
                 return true;
-            }else{
+            } else {
                 loggedInUser = null;
                 return false;
             }
         }
-        
+
         return false;
     }
 
-    public void Logout(){
+    public void Logout() {
         loggedInUser = null;
     }
 
-    public boolean Signup(String username, String password, java.util.Date dateOfBirth, InetAddress hostAddresses, String address, Gender gender){
-        if (loggedInUser!=null) {
-            return false;
+    public void Signup(String username, String password, java.util.Date dateOfBirth, InetAddress hostAddresses,String address, Gender gender){
+        if (loggedInUser != null) {
+            throw new RuntimeException("can't sign up while you are logged in");
         }
 
-        if (customerService.get(username)!=null) {
-            return false;
-        }
-
-        try {
-            ArrayList<InetAddress> hosts = new ArrayList<>();
-            hosts.add(hostAddresses);
-            customerService.create(username, password, dateOfBirth, hosts, 0, address, gender);
-            loggedInUser = customerService.get(username);
-            return true;
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
+        ArrayList<InetAddress> hosts = new ArrayList<>();
+        hosts.add(hostAddresses);
+        customerService.create(username, password, dateOfBirth, hosts, 0, address, gender);
+        loggedInUser = customerService.get(username);
     }
 
     public User getLoggedInUser() {

@@ -82,11 +82,16 @@ public class OrderService extends EntityService<Order> {
     }
 
     public String create(String customer, Map<String,Integer> products, PaymentMethod paymentMethod, Status status) {
+        if ((getLoggedInUser()==null && status.equals(Status.draft))) {
+            String id = getEntityDAO().nextId();
+            getEntityDAO().add(new Order(id, customer, products, calcTotal(products), paymentMethod, status));
+            return id;
+        }
+        
         if (permission.hasPermission("orders", "create")) {
             if (customerService.get(customer) == null){
                 throw new IllegalArgumentException("This customer doesn't exist");
             }
-
             String id = getEntityDAO().nextId();
             getEntityDAO().add(new Order(id, customer, products, calcTotal(products), paymentMethod, status));
             return id;

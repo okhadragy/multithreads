@@ -10,9 +10,13 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.*;
+
+import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import Entity.Gender;
 
 public class RegisterPage {
     private final Central mainApp;
@@ -58,11 +62,13 @@ public class RegisterPage {
         RadioButton maleRadio = new RadioButton("Male");
         maleRadio.setToggleGroup(genderGroup);
         maleRadio.setStyle("-fx-text-fill: white;");
-        maleRadio.setSelected(true); // Set default selection to Male
+        maleRadio.setSelected(true);
+        maleRadio.setUserData(Gender.male);
 
         RadioButton femaleRadio = new RadioButton("Female");
         femaleRadio.setToggleGroup(genderGroup);
         femaleRadio.setStyle("-fx-text-fill: white;");
+        maleRadio.setUserData(Gender.female);
 
         HBox genderBox = new HBox(10, maleRadio, femaleRadio);
         genderBox.setAlignment(Pos.CENTER_LEFT);
@@ -109,19 +115,37 @@ public class RegisterPage {
                 return;
             }
 
-            try {
-                LocalDate dob = LocalDate.parse(dobField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            } catch (Exception ex) {
-                validationWarning.setText("Invalid Date of Birth format (dd-MM-yyyy)!");
-                return;
-            }
-
             if (addressField.getText().isEmpty()) {
                 validationWarning.setText("Address is required!");
                 return;
             }
 
+            LocalDate dob;
+            java.util.Date date = new Date();
+            try {
+                dob = LocalDate.parse(dobField.getText(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                date = java.util.Date.from(dob.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
+            } catch (Exception ex) {
+                validationWarning.setText("Invalid Date of Birth format (dd-MM-yyyy)!");
+                return;
+            }
+
+            InetAddress inetAddress;
+            try {                
+                inetAddress = InetAddress.getLocalHost();
+            } catch (Exception err) {
+                inetAddress = InetAddress.getLoopbackAddress();
+            }
+            mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, inetAddress, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
             mainApp.showCategoryPage();
+            /*
+            try {
+                mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, inetAddress, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
+                mainApp.showCategoryPage();
+            } catch (Exception err) {
+                validationWarning.setText(err.getMessage());
+                return;
+            }*/
         });
 
         Button loginButton = new Button("Already have an account? Log in instead!");
