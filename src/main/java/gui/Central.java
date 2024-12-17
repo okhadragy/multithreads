@@ -1,7 +1,9 @@
 package gui;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
+import Chat.Client;
 import Services.*;
 import javafx.application.Application;
 import javafx.geometry.*;
@@ -26,6 +28,7 @@ public class Central extends Application {
     private CustomerService customerService = new CustomerService(auth,permission,productService,null);
     private OrderService orderService = new OrderService(auth,permission,productService,customerService);
     private ChatService chatService = new ChatService(auth, permission, adminService, customerService);
+    private ArrayList<Client> clients = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -119,7 +122,7 @@ public class Central extends Application {
     public void showChatPage(User user){
         ChatPage chatPage = new ChatPage(this,user);
         primaryStage.setScene((chatPage.getScene(primaryStage)));
-        
+        clients.add(chatPage.getClient());
     }
 
     // Admin pages
@@ -143,6 +146,22 @@ public class Central extends Application {
         AdminOrdersPage adminOrdersPage = new AdminOrdersPage(this);
         primaryStage.setScene(adminOrdersPage.getScene(primaryStage));
     }
+
+    /* 
+    private void close(){
+        if (clients != null) {
+            for (Client client : clients) {
+                System.out.println("biuuig");
+                client.closeConnection();
+            }
+        }
+    }
+    
+    @Override
+    public void stop() {
+        close();
+    }
+    */
 
     public static void main(String[] args) {
         launch(args);

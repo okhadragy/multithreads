@@ -1,4 +1,5 @@
 package Chat;
+
 import java.io.*;
 import java.net.*;
 import javafx.application.Platform;
@@ -6,7 +7,7 @@ import javafx.scene.control.TextField;
 import Services.ChatService;
 import gui.ChatPage;
 
-public class Client implements Runnable{
+public class Client implements Runnable {
     private InetAddress host;
     private final int PORT = 122;
     private Socket socket;
@@ -14,8 +15,9 @@ public class Client implements Runnable{
     private PrintWriter out;
     private ChatPage chatPage;
     private ChatService chatService;
+    private boolean running = true;
 
-    public Client(ChatPage chatPage, ChatService chatService){
+    public Client(ChatPage chatPage, ChatService chatService) {
         try {
             host = InetAddress.getLocalHost();
         } catch (IOException e) {
@@ -26,54 +28,86 @@ public class Client implements Runnable{
     }
 
     public void sendMessage(String userMessage) {
-        if (out !=null) {
-            out.println(chatService.getLoggedInUser().getUsername()+"\u0001"+chatPage.getUsername()+"\u0001"+userMessage);
+        if (out != null) {
+            out.println(chatService.getLoggedInUser().getUsername() + "\u0001" + chatPage.getUsername() + "\u0001"
+                    + userMessage);
         }
     }
 
-    public void closeConnection(){
+    public void closeConnection() {
         if (in != null) {
+            System.out.println("hi input");
             try {
                 in.close();
-            } catch (IOException e) {
+                System.out.println("input is closed");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+        
         if (out != null) {
-            out.close();
+            try {
+                out.close();
+                System.out.println("Output is closed");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
         }
 
         if (socket != null) {
             try {
                 socket.close();
-            } catch (IOException e) {}
+                System.out.println("Socket is closed");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+    
+    public void close(){
+        running = false; 
     }
 
     @Override
     public void run() {
-        try
-        {
+        try {
             this.socket = new Socket(host.getHostAddress(), PORT);
-            System.out.println(socket);
             in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            String serverMessage;
-            while ((serverMessage = in.readLine()) != null) {
-                String[] parts = serverMessage.split("\u0001", 3);
-                String from = parts[0].trim();
-                String to = parts[1].trim();
-                String content = parts[2].trim();
-                System.out.println(serverMessage);
-                System.out.println(from);
-                System.out.println(to);
-                if (chatPage.getUsername().equals(from) && chatService.getLoggedInUser().getUsername().equals(to)) {
-                    Platform.runLater(() -> {
-                        chatPage.receiveMessage(content);
-                    });   
+            System.out.println(socket);
+
+            while (socket.isBound() && !socket.isClosed() && running) {
+                try {
+                    String serverMessage = in.readLine();
+                    if (serverMessage == null) {
+                        continue;
+                    }
+
+                    String[] parts = serverMessage.split("\u0001", 3);
+                    if (parts.length != 3) {
+                        System.err.println("Invalid message format: " + serverMessage);
+                    }
+                    String from = parts[0].trim();
+                    String to = parts[1].trim();
+                    String content = parts[2].trim();
+
+
+                    if (chatPage.getUsername().equals(from) &&
+                            chatService.getLoggedInUser().getUsername().equals(to)) {
+                        Platform.runLater(() -> chatPage.receiveMessage(content));
+                    }
+
+                } catch (IOException e) {
+                    continue;
                 }
             }
+            System.out.println("Client is closed");
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally{
+            closeConnection();
         }
     }
 }

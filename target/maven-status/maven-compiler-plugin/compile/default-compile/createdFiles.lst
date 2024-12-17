@@ -20,7 +20,6 @@ gui\AdminCategoriesPage.class
 Services\EntityDAO.class
 gui\SelectProductPage.class
 Entity\PaymentMethod.class
-Entity\Category.class
 module-info.class
 Entity\Product.class
 Entity\Admin.class

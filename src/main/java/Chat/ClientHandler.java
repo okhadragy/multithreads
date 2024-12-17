@@ -1,4 +1,5 @@
 package Chat;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -21,48 +22,45 @@ class ClientHandler implements Runnable {
         this.chatService = chatService;
     }
 
-    private void sendToAll(String message){
-        ArrayList<Socket> removeSockets = new ArrayList<>();
-        System.out.println(users);
+    private void sendToAll(String message) {
+        ArrayList<Socket> removedSockets = new ArrayList<>();
         for (Socket socket : users) {
-            try(PrintWriter out = new PrintWriter(socket.getOutputStream(), true)){
+            try {
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 out.println(message);
-            } catch (SocketException e){
-                removeSockets.add(socket);
-            }
-            catch (IOException e){
+            } catch (SocketException e) {
+                removedSockets.add(socket);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println(removeSockets);
-        users.removeAll(removeSockets);
+        synchronized (users) {
+            users.removeAll(removedSockets);
+        }
     }
 
     @Override
     public void run() {
         try (
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        )
-        {
-            String clientMessage;
-            while ((clientMessage = in.readLine()) != null) {
-                System.out.println("Received from client ("+clientSocket.getInetAddress()+","+clientSocket.getPort()+"): " + clientMessage);
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));) {
+            while (clientSocket.isBound() && !clientSocket.isClosed()) {
+                String clientMessage = in.readLine();
+                if (clientMessage == null) {
+                    continue;
+                }
+                System.out.println("Received from client (" + clientSocket.getInetAddress() + ","
+                        + clientSocket.getPort() + "): " + clientMessage);
                 String[] parts = clientMessage.split("\u0001", 3);
                 String from = parts[0].trim();
                 String to = parts[1].trim();
                 String content = parts[2].trim();
-                chatService.create(from,to,content);
-                sendToAll(clientMessage);              
+                chatService.create(from, to, content);
+                sendToAll(clientMessage);
             }
+            System.out.println("client handler closed");
 
         } catch (IOException e) {
             e.printStackTrace();
-        }finally{
-            if (clientSocket != null) {
-                try {
-                    clientSocket.close();
-                } catch (IOException e) {}   
-            }
         }
     }
 }

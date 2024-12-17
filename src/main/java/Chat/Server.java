@@ -30,10 +30,12 @@ public class Server {
             System.out.println("Server started and listening on port "+PORT+"...");
             while (serverSocket.isBound() && ! serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
-                Thread thread = new Thread(new ClientHandler(clientSocket,users,chatService));
-                thread.start();
-                users.add(clientSocket);
+                synchronized (users) {
+                    users.add(clientSocket);
+                }
+                new Thread(new ClientHandler(clientSocket,users,chatService)).start();
             }
+            System.out.println("Server closed");
         } catch (IOException e) {
             e.printStackTrace();
         } finally{

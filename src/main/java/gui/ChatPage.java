@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import Entity.Message;
 import Entity.User;
+import Services.ChatService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.*;
@@ -31,6 +32,8 @@ public class ChatPage {
 
     public ChatPage(Central mainApp, User user) {
         this.mainApp = mainApp;
+        // Refresh database
+        mainApp.setChatService(new ChatService(mainApp.getAuth(), mainApp.getPermission(), mainApp.getAdminService(), mainApp.getCustomerService()));
         this.user = user;
         this.username = user.getUsername();
         this.client = new Client(this, mainApp.getChatService());
@@ -154,7 +157,7 @@ public class ChatPage {
         returnButton.setStyle("-fx-background-color: transparent;");
         returnButton.setCursor(Cursor.HAND);
         returnButton.setOnAction(e -> {
-            client.closeConnection();
+            client.close();
             mainApp.showChatListPage();
         });        
 
@@ -265,5 +268,9 @@ public class ChatPage {
 
     public void closeConnection(){
         client.closeConnection();
+    }
+
+    public Client getClient() {
+        return client;
     }
 }
