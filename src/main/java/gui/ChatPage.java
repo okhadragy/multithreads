@@ -1,6 +1,13 @@
 package gui;
 
+import java.net.BindException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Stack;
+
+import Entity.Message;
+import Entity.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.*;
@@ -12,13 +19,24 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.*;
+import Chat.*;
+
 
 public class ChatPage {
 
     private final Central mainApp;
+    private final User user;
+    private final String username;
+    private final Client client;
 
-    public ChatPage(Central mainApp) {
+    public ChatPage(Central mainApp, User user) {
         this.mainApp = mainApp;
+        this.user = user;
+        this.username = user.getUsername();
+        this.client = new Client(this, mainApp.getChatService());
+        Thread thread = new Thread(client);
+        thread.setDaemon(true);
+        thread.start();
         chatBox = new VBox(10);
         chatBox.setAlignment(Pos.TOP_CENTER);
     }
@@ -135,10 +153,13 @@ public class ChatPage {
         returnButton.setGraphic(returnImageView);
         returnButton.setStyle("-fx-background-color: transparent;");
         returnButton.setCursor(Cursor.HAND);
-        returnButton.setOnAction(e -> {mainApp.showChatListPage();});        
+        returnButton.setOnAction(e -> {
+            client.closeConnection();
+            mainApp.showChatListPage();
+        });        
 
         // User info at the top
-        currentUserText = new Text("Chatting with: [User Name]");
+        currentUserText = new Text("Chatting with: "+username);
         currentUserText.setFill(Color.WHITE);
         currentUserText.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         HBox userInfoBox = new HBox(returnButton, currentUserText);
@@ -159,9 +180,9 @@ public class ChatPage {
         sendButton.setStyle("-fx-background-color: #006fff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px;");
         sendButton.setCursor(Cursor.HAND);
 
+        createChat();
         sendButton.setOnMouseClicked(event -> sendMessage()); // send message on click send
         messageInput.setOnAction(event -> sendMessage()); // send message on click enter
-
         messageBox.getChildren().addAll(messageInput, sendButton);
         
         // Set bottom layout
@@ -172,11 +193,35 @@ public class ChatPage {
         return new Scene(bp, 1366, 768);
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void receiveMessage(String message) {
+        if (!message.isEmpty()) {
+            
+            HBox chatBubble = createChatBubble(message, false);
+            // TRUE --> BLUE USER MESSAGE
+            // FALSE --> PURPLE OTHER USER MESSAGE
+            chatBox.getChildren().add(chatBubble);
+            HBox.setMargin(chatBubble, new Insets(100, 100, 5, 5));
+
+            messageInput.clear();
+
+            // scroll to the bottom after sending the message
+            Platform.runLater(() -> {
+                chatBox.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+                    scrollPane.setVvalue(1.0); // 1 means bottom 0 means top, go to the bottom of the scrollable content
+                });
+            });
+        }
+    }
+
     // Function to add message to the chat
     private void sendMessage() {
         String message = messageInput.getText();
         if (!message.isEmpty()) {
-
+            client.sendMessage(message);
             HBox chatBubble = createChatBubble(message, true);
             // TRUE --> BLUE USER MESSAGE
             // FALSE --> PURPLE OTHER USER MESSAGE
@@ -205,7 +250,20 @@ public class ChatPage {
         chatBubble.setAlignment(isUserMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         chatBubble.getChildren().add(messageLabel);
         HBox.setMargin(messageLabel, new Insets(5, 20, 0, 20));
-
         return chatBubble;
+    }
+
+    private void createChat(){
+        ArrayList<Message> messages = mainApp.getChatService().getChat(mainApp.getAuth().getLoggedInUser().getUsername(), username);
+        for (Message message : messages) {
+            HBox chatBubble = createChatBubble(message.getContent(), message.getFrom().equals(mainApp.getAuth().getLoggedInUser().getUsername()));
+            chatBox.getChildren().add(chatBubble);
+            HBox.setMargin(chatBubble, new Insets(100, 100, 5, 5));
+        }
+        
+    }
+
+    public void closeConnection(){
+        client.closeConnection();
     }
 }

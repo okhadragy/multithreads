@@ -9,15 +9,15 @@ public class Customer extends User {
     private ArrayList<String> interests;
     private String cartId;
     
-    public Customer(String username, String password, java.util.Date dateOfBirth,  ArrayList<InetAddress> hostAddresses, double balance, String address, Gender gender, ArrayList<String> interests){
-        super(username, password, Role.customer, dateOfBirth, hostAddresses);
+    public Customer(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender, ArrayList<String> interests){
+        super(username, password, Role.customer, dateOfBirth);
         setBalance(balance);
         setGender(gender);
         setInterests(interests);
     }
 
     public Customer(Customer customer) {
-        this(customer.getUsername(), customer.getPassword(), customer.getDateOfBirth(), customer.getHostAddresses(), customer.balance, customer.address, customer.gender, customer.interests);
+        this(customer.getUsername(), customer.getPassword(), customer.getDateOfBirth(), customer.balance, customer.address, customer.gender, customer.interests);
         setCartId(customer.cartId);
     }
 

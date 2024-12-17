@@ -25,13 +25,12 @@ public class TestMain {
         Scanner i = new Scanner(System.in);
         String username, pass;
         try {
-            InetAddress inetAddress = InetAddress.getLocalHost();
             do {
                 System.out.print("Enter Username: ");
                 username = i.nextLine();
                 System.out.print("Enter Password: ");
                 pass = i.nextLine();
-            } while (!auth.Login(username, pass,inetAddress));
+            } while (!auth.Login(username, pass));
         } catch (Exception e) {
         }
         

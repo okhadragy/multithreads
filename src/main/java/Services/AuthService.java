@@ -31,7 +31,7 @@ public class AuthService {
         this.customerService = customerService;
     }
 
-    public boolean Login(String username, String password, InetAddress hostAddresses) {
+    public boolean Login(String username, String password) {
         if (loggedInUser != null) {
             return false;
         }
@@ -45,7 +45,6 @@ public class AuthService {
 
         if (loggedInUser != null) {
             if (loggedInUser.checkPassword(password)) {
-                loggedInUser.addHostAddress(hostAddresses);
                 return true;
             } else {
                 loggedInUser = null;
@@ -56,7 +55,6 @@ public class AuthService {
         loggedInUser = adminService.get(username);
         if (loggedInUser != null) {
             if (loggedInUser.checkPassword(password)) {
-                loggedInUser.addHostAddress(hostAddresses);
                 return true;
             } else {
                 loggedInUser = null;
@@ -71,14 +69,12 @@ public class AuthService {
         loggedInUser = null;
     }
 
-    public void Signup(String username, String password, java.util.Date dateOfBirth, InetAddress hostAddresses,String address, Gender gender){
+    public void Signup(String username, String password, java.util.Date dateOfBirth, String address, Gender gender){
         if (loggedInUser != null) {
             throw new RuntimeException("can't sign up while you are logged in");
         }
 
-        ArrayList<InetAddress> hosts = new ArrayList<>();
-        hosts.add(hostAddresses);
-        customerService.create(username, password, dateOfBirth, hosts, 0, address, gender);
+        customerService.create(username, password, dateOfBirth, 0, address, gender);
         loggedInUser = customerService.get(username);
     }
 

@@ -1,20 +1,16 @@
 package Entity;
-import java.net.*;
-import java.util.ArrayList;
 
 public abstract class User implements Entity {
     private String username;
     private String password;
     private Role role;
     private java.util.Date dateOfBirth;
-    private ArrayList<InetAddress> hostAddresses;
 
-    public User(String username, String password,Role role,java.util.Date dateOfBirth, ArrayList<InetAddress> hostAddresses){
+    public User(String username, String password,Role role,java.util.Date dateOfBirth){
         setUsername(username);
         setPassword(password);
         setRole(role);
         setDateOfBirth(dateOfBirth);
-        setHostAddresses(hostAddresses);
     }
 
     public String getUsername() {
@@ -76,53 +72,6 @@ public abstract class User implements Entity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public ArrayList<InetAddress> getHostAddresses() {
-        if (hostAddresses == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(hostAddresses);
-    }
-
-    public void setHostAddresses(ArrayList<InetAddress> hostAddresses) {
-        if (hostAddresses == null) {
-            throw new IllegalArgumentException("Host Addresses cannot be null.");
-        }
-
-        if (hostAddresses.isEmpty()) {
-            throw new IllegalArgumentException("Host Addresses cannot be empty.");
-        }
-
-        for (InetAddress hostAddress : hostAddresses) {
-            if (hostAddress == null) {
-                throw new IllegalArgumentException("Host Address cannot be null.");
-            }
-        }
-
-        this.hostAddresses = hostAddresses;
-    }
-
-    public void addHostAddress(InetAddress hostAddress){
-        if (hostAddress == null) {
-            throw new IllegalArgumentException("Host Address cannot be null.");
-        }
-
-        if (hostAddresses.contains(hostAddress)) {
-            return;
-        }
-
-        hostAddresses.add(hostAddress);
-    }
-    
-    public void removeHostAddress(InetAddress hostAddress){
-        if (hostAddress == null) {
-            throw new IllegalArgumentException("Host Address cannot be null.");
-        }
-        if (!hostAddresses.contains(hostAddress)) {
-            throw new IllegalArgumentException("This Host Address is not in your addresses.");
-        }
-
-        hostAddresses.remove(hostAddress);
-    }
 
     @Override
     public Object getKey() {

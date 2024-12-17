@@ -41,13 +41,13 @@ public class CustomerService extends EntityService<Customer> {
         this.orderService = orderService;
     }
 
-    public String create(String username, String password, java.util.Date dateOfBirth, ArrayList<InetAddress> hostAddresses, double balance, String address, Gender gender) {        
+    public String create(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender) {        
         if (permission.hasPermission("customers", "create")||getLoggedInUser()==null) {
             if (getEntityDAO().getIndex(username)!=-1) {
                 throw new IllegalArgumentException("This username is used");
             }
 
-            Customer user = new Customer(username,password,dateOfBirth,hostAddresses,balance,address,gender,new ArrayList<>());    
+            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>());    
             getEntityDAO().add(user);
             String cartId = orderService.create(username, new HashMap<>(), null, Status.draft);
             user.setCartId(cartId);
@@ -193,32 +193,6 @@ public class CustomerService extends EntityService<Customer> {
             ArrayList<String> products = customer.getInterests();
             products.remove(productId);
             customer.setInterests(products);
-            getEntityDAO().update(customer);
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
-        }
-    }
-
-    public void addHostAddress(String username, InetAddress hostAddress){
-        if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
-            Customer customer = getEntityDAO().get(username);
-            if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
-            }
-            customer.addHostAddress(hostAddress);
-            getEntityDAO().update(customer);
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
-        }
-    }
-
-    public void removeHostAddress(String username, InetAddress hostAddress){
-        if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
-            Customer customer = getEntityDAO().get(username);
-            if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
-            }
-            customer.removeHostAddress(hostAddress);
             getEntityDAO().update(customer);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");

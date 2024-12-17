@@ -73,14 +73,8 @@ public class LoginPage {
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            InetAddress inetAddress;
-            try {                
-                inetAddress = InetAddress.getLocalHost();
-            } catch (Exception err) {
-                inetAddress = InetAddress.getLoopbackAddress();
-            }
 
-            if (mainApp.getAuth().Login(username, password, inetAddress)) {
+            if (mainApp.getAuth().Login(username, password)) {
                 if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
                     mainApp.showAdminCategoriesPage();
                 }else{

@@ -130,15 +130,9 @@ public class RegisterPage {
                 return;
             }
 
-            InetAddress inetAddress;
-            try {                
-                inetAddress = InetAddress.getLocalHost();
-            } catch (Exception err) {
-                inetAddress = InetAddress.getLoopbackAddress();
-            }
-            
+        
             try {
-                mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, inetAddress, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
+                mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
                 mainApp.showCategoryPage();
             } catch (Exception err) {
                 validationWarning.setText(err.getMessage());

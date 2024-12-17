@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class Admin extends User {
     private int workingHours;
 
-    public Admin(String username, String password, Role role, java.util.Date dateOfBirth, ArrayList<InetAddress> hostAddresses, int workingHours) {
-        super(username, password, role, dateOfBirth, hostAddresses);
+    public Admin(String username, String password, Role role, java.util.Date dateOfBirth, int workingHours) {
+        super(username, password, role, dateOfBirth);
         setWorkingHours(workingHours);
     }
 
     public Admin(Admin admin) {
-        this(admin.getUsername(), admin.getPassword(), admin.getRole(), admin.getDateOfBirth(), admin.getHostAddresses(), admin.workingHours);  
+        this(admin.getUsername(), admin.getPassword(), admin.getRole(), admin.getDateOfBirth(), admin.workingHours);  
     }
 
     public int getWorkingHours() {

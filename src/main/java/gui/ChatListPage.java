@@ -139,11 +139,19 @@ public class ChatListPage {
     VBox mainLayout = new VBox(10);
     mainLayout.setAlignment(Pos.TOP_CENTER);
 
-    // SAMPLE, USE THE DATABASE HERE PLS
-    for (int i = 0; i < 10; i++) {
-        String role = (i % 2 == 0) ? "Admin" : "Customer";  // Alternate between Admin and Customer
-        HBox listing = createListing("User" + (i + 1), role);
+    for (Admin admin : mainApp.getAdminService().getAll()) {
+        if (admin.equals(mainApp.getAuth().getLoggedInUser())) {
+            continue;
+        }
+        HBox listing = createListing(admin, admin.getRole().toString());
         mainLayout.getChildren().addAll(listing, new Separator());
+    }
+
+    if (mainApp.getAuth().getLoggedInUser() instanceof Admin) {
+        for (Customer customer : mainApp.getCustomerService().getAll()) {
+            HBox listing = createListing(customer, "Customer");
+            mainLayout.getChildren().addAll(listing, new Separator());
+        }
     }
 
     bp.setCenter(mainLayout);
@@ -151,8 +159,8 @@ public class ChatListPage {
     return new Scene(sp, 1366, 768);
 }
 
-private HBox createListing(String username, String role) {
-    Text usernameLabel = new Text(username);
+private HBox createListing(User user, String role) {
+    Text usernameLabel = new Text(user.getUsername());
     usernameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
     usernameLabel.setStyle("-fx-fill: white");
 
@@ -179,7 +187,7 @@ private HBox createListing(String username, String role) {
     // add avatar and user box to the HBox
     listingBox.getChildren().addAll(avatar, userBox);
 
-    listingBox.setOnMouseClicked(event -> mainApp.showChatPage());
+    listingBox.setOnMouseClicked(event -> mainApp.showChatPage(user));
     // TRANSITION TO CHAT SCENE
     
     listingBox.setCursor(Cursor.HAND);

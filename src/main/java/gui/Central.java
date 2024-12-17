@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.*;
+import Entity.*;
 
 public class Central extends Application {
     private Stage primaryStage;
@@ -24,6 +25,7 @@ public class Central extends Application {
     private ProductService productService = new ProductService(auth,permission,categoryService);
     private CustomerService customerService = new CustomerService(auth,permission,productService,null);
     private OrderService orderService = new OrderService(auth,permission,productService,customerService);
+    private ChatService chatService = new ChatService(auth, permission, adminService, customerService);
 
     @Override
     public void start(Stage primaryStage) {
@@ -66,6 +68,14 @@ public class Central extends Application {
         return productService;
     }
 
+    public ChatService getChatService() {
+        return chatService;
+    }
+
+    public void setChatService(ChatService chatService) {
+        this.chatService = chatService;
+    }
+
     public void showLoginPage() {
         LoginPage loginPage = new LoginPage(this);
         primaryStage.setScene(loginPage.getScene(primaryStage));
@@ -106,9 +116,10 @@ public class Central extends Application {
         primaryStage.setScene((chatlistPage.getScene(primaryStage)));
     }
 
-    public void showChatPage(){
-        ChatPage chatPage = new ChatPage(this);
+    public void showChatPage(User user){
+        ChatPage chatPage = new ChatPage(this,user);
         primaryStage.setScene((chatPage.getScene(primaryStage)));
+        
     }
 
     // Admin pages
