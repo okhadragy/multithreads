@@ -2,7 +2,7 @@ package Services;
 
 import java.util.ArrayList;
 
-import Entity.*;
+import Entity.Product;
 
 public class ProductService extends EntityService<Product> {
     private PermissionService permission;
@@ -76,14 +76,14 @@ public class ProductService extends EntityService<Product> {
     public <T> ArrayList<Product> filter(String paramater, T data){
         if (permission.hasPermission("products","retrieve")) {
             ArrayList<Product> products = new ArrayList<>();
-            if (!(paramater.toLowerCase() == "name" && paramater.toLowerCase()=="categoryid")) {
+            if (!(paramater.toLowerCase() == "name" || paramater.toLowerCase()=="categoryid")) {
                 throw new IllegalArgumentException("This parameter doesn't exist");
             }
 
             for (Product product : getEntityDAO().getAll()) {
-                if (product.getName().equals(data) && paramater.toLowerCase()=="name") {
+                if (product.getName()!=null && product.getName().equals(data) && paramater.toLowerCase()=="name") {
                     products.add(product);
-                }else if (product.getCategoryId().equals(data) && paramater.toLowerCase()=="categoryid") {
+                }else if (product.getCategoryId()!=null && product.getCategoryId().equals(data) && paramater.toLowerCase()=="categoryid") {
                     products.add(product);
                 }
             }

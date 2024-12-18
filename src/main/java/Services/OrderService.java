@@ -1,8 +1,14 @@
 package Services;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import Entity.*;
+import Entity.Customer;
+import Entity.Order;
+import Entity.PaymentMethod;
+import Entity.Product;
+import Entity.Status;
 
 public class OrderService extends EntityService<Order> {
     private PermissionService permission;
@@ -15,6 +21,9 @@ public class OrderService extends EntityService<Order> {
         this.productService = productService;
         this.customerService = customerService;
     }
+
+
+
 
     public PermissionService getPermission() {
         return permission;
@@ -123,18 +132,18 @@ public class OrderService extends EntityService<Order> {
     public <T> ArrayList<Order> filter(String paramater, T data){
         if (permission.hasPermission("orders","retrieve")) {
             ArrayList<Order> orders = new ArrayList<>();
-            if (!(paramater.toLowerCase() == "customer" && paramater.toLowerCase()=="product" && paramater.toLowerCase()=="paymentmethod" && paramater.toLowerCase()=="status")) {
+            if (!(paramater.toLowerCase() == "customer" || paramater.toLowerCase()=="product" || paramater.toLowerCase()=="paymentmethod" || paramater.toLowerCase()=="status")) {
                 throw new IllegalArgumentException("This parameter doesn't exist");
             }
 
             for (Order order : getEntityDAO().getAll()) {
-                if (order.getCustomer().equals(data) && paramater.toLowerCase()=="customer") {
+                if (order.getCustomer()!=null && order.getCustomer().equals(data) && paramater.toLowerCase()=="customer") {
                     orders.add(order);
-                }else if (order.getProducts().containsKey(data) && paramater.toLowerCase()=="product") {
+                }else if (order.getProducts()!=null && order.getProducts().containsKey(data) && paramater.toLowerCase()=="product") {
                     orders.add(order);
-                }else if (order.getPaymentMethod().equals(data) && paramater.toLowerCase()=="paymentmethod") {
+                }else if (order.getPaymentMethod()!=null && order.getPaymentMethod().equals(data) && paramater.toLowerCase()=="paymentmethod") {
                     orders.add(order);
-                }else if (order.getStatus().equals(data) && paramater.toLowerCase()=="status") {
+                }else if (order.getStatus()!=null && order.getStatus().equals(data) && paramater.toLowerCase()=="status") {
                     orders.add(order);
                 }
             }

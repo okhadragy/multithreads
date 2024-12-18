@@ -1,11 +1,17 @@
 package Chat;
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
-import javafx.scene.control.TextArea;
-import Services.*;
-import gui.ChatPage;
+import Services.AdminService;
+import Services.AuthService;
+import Services.CategoryService;
+import Services.ChatService;
+import Services.CustomerService;
+import Services.OrderService;
+import Services.PermissionService;
+import Services.ProductService;
 
 public class Server {
     private static AuthService auth = new AuthService(null,null);

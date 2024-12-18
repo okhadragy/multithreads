@@ -1,8 +1,12 @@
 package Services;
-import java.net.InetAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import Entity.*;
+import Entity.Customer;
+import Entity.Gender;
+import Entity.Order;
+import Entity.Status;
 
 
 public class CustomerService extends EntityService<Customer> {

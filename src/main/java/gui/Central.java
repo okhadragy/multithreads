@@ -42,42 +42,72 @@ public class Central extends Application {
         primaryStage.show();
         showLoginPage(); // Start with Scene 1
     }
-
-    public AdminService getAdminService() {
-        return adminService;
-    }
-
-    public AuthService getAuth() {
-        return auth;
-    }
-
-    public CategoryService getCategoryService() {
-        return categoryService;
-    }
-
-    public CustomerService getCustomerService() {
-        return customerService;
-    }
-
-    public OrderService getOrderService() {
-        return orderService;
-    }
-
-    public PermissionService getPermission() {
-        return permission;
-    }
-
-    public ProductService getProductService() {
-        return productService;
-    }
-
-    public ChatService getChatService() {
-        return chatService;
-    }
-
-    public void setChatService(ChatService chatService) {
-        this.chatService = chatService;
-    }
+        // Getters and Setters
+        public AdminService getAdminService() {
+            return adminService;
+        }
+    
+        public void setAdminService(AdminService adminService) {
+            this.adminService = adminService;
+        }
+    
+        public AuthService getAuth() {
+            return auth;
+        }
+    
+        public void setAuth(AuthService auth) {
+            this.auth = auth;
+        }
+    
+        public CategoryService getCategoryService() {
+            return categoryService;
+        }
+    
+        public void setCategoryService(CategoryService categoryService) {
+            this.categoryService = categoryService;
+        }
+    
+        public CustomerService getCustomerService() {
+            return customerService;
+        }
+    
+        public void setCustomerService(CustomerService customerService) {
+            this.customerService = customerService;
+        }
+    
+        public OrderService getOrderService() {
+            return orderService;
+        }
+    
+        public void setOrderService(OrderService orderService) {
+            this.orderService = orderService;
+        }
+    
+        public PermissionService getPermission() {
+            return permission;
+        }
+    
+        public void setPermission(PermissionService permission) {
+            this.permission = permission;
+        }
+    
+        public ProductService getProductService() {
+            return productService;
+        }
+    
+        public void setProductService(ProductService productService) {
+            this.productService = productService;
+        }
+    
+        public ChatService getChatService() {
+            return chatService;
+        }
+    
+        public void setChatService(ChatService chatService) {
+            this.chatService = chatService;
+        }
+    
+    
 
     public void showLoginPage() {
         LoginPage loginPage = new LoginPage(this);

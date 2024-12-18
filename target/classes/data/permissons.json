@@ -5,7 +5,7 @@
     },
     {
         "role": "customer",
-        "actions": ["admins_retrieve","customers_retrieve","products_retrieve","categories_retrieve","orders_create","orders_update","orders_retrieve","messages_create","messages_update","messages_retrieve","messages_delete"]
+        "actions": ["admins_retrieve","customers_retrieve","products_retrieve","categories_retrieve","orders_create","orders_update","orders_retrieve","messages_create","messages_update","messages_retrieve","messages_delete","orders_delete"]
     },
     {
         "role": "product",

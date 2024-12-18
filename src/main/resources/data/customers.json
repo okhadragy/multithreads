@@ -1,15 +1,1 @@
-[
-    {
-        "balance": 0.0,
-        "gender": "male",
-        "interests": [],
-        "cartId": "5",
-        "username": "omar",
-        "password": "Omar2005",
-        "role": "customer",
-        "dateOfBirth": "Oct 10, 2005, 12:00:00 AM",
-        "hostAddresses": [
-            "192.168.56.1"
-        ]
-    }
-]
+[{"balance":0.0,"gender":"male","interests":[],"cartId":"5","username":"omar","password":"Omar2005","role":"customer","dateOfBirth":"Oct 10, 2005, 12:00:00 AM"},{"balance":0.0,"gender":"male","interests":[],"cartId":"9","username":"mahmoud","password":"mahmoud2005","role":"customer","dateOfBirth":"Dec 26, 2005, 12:00:00 AM"}]
