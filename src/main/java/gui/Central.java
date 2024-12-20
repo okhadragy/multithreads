@@ -129,10 +129,13 @@ public class Central extends Application {
         primaryStage.setScene(productPage.getScene(primaryStage));
     }
 
-    public void showSelectProductPage(boolean check) {
-        SelectProductPage selectProductPage = new SelectProductPage(this, check);
+    public void showSelectProductPage(Product product, boolean check) {
+        SelectProductPage selectProductPage = new SelectProductPage(this, product, check);
         primaryStage.setScene(selectProductPage.getScene(primaryStage));
     }
+
+
+
 
     public void showCartPage(){
         CartPage cartPage = new CartPage(this);
@@ -148,6 +151,7 @@ public class Central extends Application {
         ChatListPage chatlistPage = new ChatListPage(this);
         primaryStage.setScene((chatlistPage.getScene(primaryStage)));
     }
+
 
     public void showChatPage(User user){
         ChatPage chatPage = new ChatPage(this,user);

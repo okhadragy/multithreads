@@ -154,7 +154,11 @@ public class OrdersPage {
                     cancelButton.setOnAction(event -> {
                         Order selectedOrder = tableView.getSelectionModel().getSelectedItem();
                         String orderId = selectedOrder.getId();
-                        System.out.println(orderId);
+
+                       if( mainApp.getOrderService().get(orderId).getStatus().equals(Status.draft)){
+                           return;
+                       }
+
                         mainApp.getOrderService().delete(orderId);
                         tableView.getItems().remove(selectedOrder); 
                     });

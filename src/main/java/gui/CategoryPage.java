@@ -181,7 +181,8 @@ public class CategoryPage {
         // For xImageView
         xImageView.setCursor(Cursor.HAND);
         xImageView.setOnMouseClicked(event -> {
-            System.out.println("Clicked on x!"); // Replace with desired action
+            System.out.println("Clicked on x!");
+
         });
 
         // For yImageView
@@ -202,7 +203,7 @@ public class CategoryPage {
             System.out.println("Clicked on m!"); // Replace with desired action
         });
 
-        
+
         //
 
         return new Scene(bp, 1366, 768);

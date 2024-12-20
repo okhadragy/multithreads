@@ -1,7 +1,10 @@
 package gui;
 
-import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
+import Entity.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.*;
@@ -17,7 +20,7 @@ import javafx.scene.paint.*;
 public class CartPage {
 
     private final Central mainApp;
-
+    private List<VBox> allProducts = new ArrayList<>();
     public CartPage(Central mainApp) {
         this.mainApp = mainApp;
     }
@@ -34,7 +37,7 @@ public class CartPage {
         // when the viewport loads in set its style to transparent so it doesn't affect scrollpane styling
         sp.setFitToWidth(true); // extend the scrollpane on the entire view
         sp.setStyle("-fx-background-color: black; -fx-border-color: transparent"); // make it black
-        
+
         // nav
 
         Image logo = new Image(getClass().getResource("/assets/multithreadsLogo.png").toExternalForm());
@@ -119,7 +122,7 @@ public class CartPage {
         controlBar.setPadding(new Insets(30, 15, 0, 70));
 
         // Create the search bar
-        TextField searchBar = new TextField();
+       /* TextField searchBar = new TextField();
         searchBar.setPromptText("Search for products...");
         searchBar.setPrefWidth(250);
 
@@ -131,23 +134,51 @@ public class CartPage {
         // Create sort by dropdown
         ComboBox<String> sortByComboBox = new ComboBox<>();
         sortByComboBox.getItems().addAll("Price (Low to High)", "Price (High to Low)", "Name (A-Z)", "Name (Z-A)");
-        sortByComboBox.setValue("Price (Low to High)");
+        sortByComboBox.setValue("Price (Low to High)");*/
 
         FlowPane productGrid = new FlowPane();
         productGrid.setHgap(50);  // Horizontal gap between columns
         productGrid.setAlignment(null);
         productGrid.setAlignment(Pos.CENTER);
-        // Add products to the grid (Example)
-        addProductToGrid(productGrid, "Product 1", "10.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 2", "15.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 3", "20.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 4", "25.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 4", "25.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 4", "25.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 4", "25.99", "/assets/m.png");
-        addProductToGrid(productGrid, "Product 4", "25.99", "/assets/m.png");
 
-        controlBar.getChildren().addAll(searchBar, categoryComboBox, sortByComboBox);
+
+
+
+        try {
+            // Get the products in the cart as a Map (productId -> quantity)
+            Map<String, Integer> cartMap = mainApp.getCustomerService().getCartProducts(mainApp.getCustomerService().getLoggedInUser().getUsername());
+
+            // List to store the products in the cart
+            List<Product> products = new ArrayList<>();
+
+            // Loop through the cart map and fetch products
+            for (Map.Entry<String, Integer> entry : cartMap.entrySet()) {
+                String productId = entry.getKey();  // The product ID (key in the map)
+                Integer quantity = entry.getValue(); // The quantity of the product
+
+                // Retrieve the product from the product service (assuming you have a getProduct method)
+                Product product = mainApp.getProductService().get(productId);
+
+                if (product != null) {
+                    // You can modify the product object to include quantity information if needed
+                    products.add(product); // Add product to the list
+                }
+            }
+
+            // Add products to the grid
+            for (Product product : products) {
+                addProductToGrid(productGrid, product); // Add each product to the grid
+            }
+
+        } catch (RuntimeException e) {
+            System.err.println("Error getting products: " + e.getMessage());
+            // Optionally, display a message in the UI for the user
+            Label errorLabel = new Label("Failed to load products.");
+            errorLabel.setTextFill(Color.RED);
+            productGrid.getChildren().add(errorLabel);
+        }
+
+        //controlBar.getChildren().addAll(searchBar, categoryComboBox, sortByComboBox);
         mainLayout.getChildren().addAll(controlBar, productGrid);
         bp.setCenter(mainLayout);
 
@@ -161,10 +192,17 @@ public class CartPage {
         warning.setFill(Color.RED);
 
         // Payment method dropdown
+        // Payment method dropdown
         ComboBox<String> paymentMethodComboBox = new ComboBox<>();
         paymentMethodComboBox.setMaxWidth(200);
-        paymentMethodComboBox.getItems().addAll("Cash", "Debit", "Credit", "Bank");
-        paymentMethodComboBox.setValue("Select Payment Method.."); // default option
+
+// Populate with payment methods
+        for (PaymentMethod method : PaymentMethod.values()) {
+            paymentMethodComboBox.getItems().add(method.name());
+        }
+
+        paymentMethodComboBox.setValue("Select Payment Method.."); // Default option
+
 
         // "Order" Button
         Button orderButton = new Button("Order");
@@ -179,12 +217,12 @@ public class CartPage {
                 warning.setText("Cart is empty!");
             }
             else{
-                // code to finalize order and reset cart
-
+String cartId = mainApp.getCustomerService().get(mainApp.getCustomerService().getLoggedInUser().getUsername()).getCartId();
+mainApp.getOrderService().setStatus(cartId, Status.processing);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeight(600);
                 alert.setTitle("Order Confirmation");
-                alert.setHeaderText("ORDER ID: " + 0);
+                alert.setHeaderText("ORDER ID: " + cartId);
                 alert.setContentText("Your order has been placed successfully.\n" + "\nYou can expect your items to be shipped within the next 2-3 business days.");
                 warning.setText("");
                 alert.showAndWait();
@@ -201,17 +239,23 @@ public class CartPage {
 
     }
 
-    private void addProductToGrid(FlowPane grid, String productName, String productPrice, String imagePath) {
-        Image productImage = new Image(getClass().getResourceAsStream(imagePath));
+    private void addProductToGrid(FlowPane grid, Product product) {
+        Image productImage;
+        try {
+            productImage = new Image(getClass().getResourceAsStream(product.getImage()));
+        } catch (Exception e) {
+
+            productImage = new Image(getClass().getResourceAsStream("/assets/m.png")); // Fallback image
+        }
         ImageView productImageView = new ImageView(productImage);
         productImageView.setFitWidth(200);
         productImageView.setFitHeight(200);
 
-        Label nameLabel = new Label(productName);
+        Label nameLabel = new Label(product.getName());
         nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         nameLabel.setTextFill(Color.WHITE);
 
-        Label priceLabel = new Label(productPrice + "EGP");
+        Label priceLabel = new Label(product.getPrice() + "EGP");
         priceLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
         HBox buttonLine = new HBox(10);
@@ -220,26 +264,40 @@ public class CartPage {
         Button showProductButton = new Button("Show Product");
         showProductButton.setCursor(Cursor.HAND);
         showProductButton.setOnMouseClicked(e -> {
-            mainApp.showSelectProductPage(true);
+            String productId = product.getId();  // Directly get the product ID
+            Product selectedProduct = mainApp.getProductService().get(productId);
+            mainApp.showSelectProductPage(selectedProduct, false);  // Show the product page
         });
         showProductButton.setStyle("-fx-background-color: #006fff; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px; -fx-font-size: 14px;");
 
         Button removeButton = new Button("Remove");
         removeButton.setCursor(Cursor.HAND);
         removeButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px; -fx-font-size: 14px;");
-
-        buttonLine.getChildren().addAll(showProductButton, removeButton);
-        VBox productBox = new VBox(10, productImageView, nameLabel, priceLabel, buttonLine);
-        productBox.setAlignment(Pos.CENTER);
-
         removeButton.setOnMouseClicked(e -> {
-            grid.getChildren().remove(productBox);
-            // remove from arraylist
+            // Remove product from cart logic
+            String productId = product.getId();  // Get the ID of the product to remove
+            String username = mainApp.getCustomerService().getLoggedInUser().getUsername();  // Get the logged-in user's username
+
+            // Call the service to remove the product
+            mainApp.getCustomerService().removeFromCart(username, productId);
+
+            // Remove the product from the UI by accessing the productBox and removing it from the grid
+            grid.getChildren().removeIf(node -> node instanceof VBox && node.getUserData() == product);
+
+            // Optionally, you could refresh the cart or show a success message
         });
 
-        grid.getChildren().add(productBox);
-        FlowPane.setMargin(productBox, new Insets(0, 0, 50, 0));
+        buttonLine.getChildren().addAll(showProductButton, removeButton);
 
+        VBox productBox = new VBox(10);
+        productBox.setAlignment(Pos.CENTER);
+        productBox.getChildren().addAll(productImageView, nameLabel, priceLabel, buttonLine);
+
+        // Store productBox as user data so it can be easily accessed later
+        productBox.setUserData(product);
+
+        grid.getChildren().add(productBox);
     }
-    
+
+
 }

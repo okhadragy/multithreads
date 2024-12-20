@@ -130,7 +130,7 @@ public class RegisterPage {
                 return;
             }
 
-        
+
             try {
                 mainApp.getAuth().Signup(usernameField.getText(), passwordField.getText(),date, addressField.getText(),(Gender) genderGroup.getSelectedToggle().getUserData());
                 mainApp.showCategoryPage();

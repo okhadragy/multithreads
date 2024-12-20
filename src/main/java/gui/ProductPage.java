@@ -13,6 +13,7 @@ import javafx.scene.paint.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import Entity.Product; // Import the Product class
 
@@ -236,14 +237,21 @@ public class ProductPage {
 
         return new Scene(sp, 1366, 768);
     }
+    private static final Map<String, String> CATEGORY_MAP = Map.of(
+            "1", "Hoodies",
+            "2", "T-Shirts",
+            "3", "Trousers",
+            "4", "Shoes"
+    );
+
 
     private void addProductToGrid(FlowPane grid, Product product) {
-        // Load product image
+
         Image productImage;
         try {
-            productImage = new Image(getClass().getResourceAsStream(product.getImage()));
+            productImage = new Image("/assets/m.png");
         } catch (Exception e) {
-            System.err.println("Error loading image: " + product.getImage());
+
             productImage = new Image(getClass().getResourceAsStream("/assets/m.png")); // Fallback image
         }
         ImageView productImageView = new ImageView(productImage);
@@ -255,7 +263,7 @@ public class ProductPage {
         nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         nameLabel.setTextFill(Color.WHITE);
 
-        Label priceLabel = new Label("$" + product.getPrice() + " EGP");
+        Label priceLabel = new Label(product.getPrice() + " EGP");
         priceLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         priceLabel.setTextFill(Color.LIGHTGRAY);
 
@@ -263,11 +271,21 @@ public class ProductPage {
         Button showProductButton = new Button("Show Product");
         showProductButton.setCursor(Cursor.HAND);
         showProductButton.setOnMouseClicked(e -> {
-            mainApp.showSelectProductPage(false);
+            // Retrieve the selected product
+            Product selectedProduct = mainApp.getProductService().get(product.getId());  // Correct method call
+
+            if (selectedProduct != null) {
+                mainApp.showSelectProductPage(selectedProduct, false);  // Show selected product page
+            } else {
+                System.err.println("Error: Product not found!");  // Handle error if product not found
+            }
         });
+
+
         showProductButton.setStyle("-fx-background-color: #006fff; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px; -fx-font-size: 14px;");
 
-        Label categoryLabel = new Label(product.getCategoryId());
+        String categoryName = CATEGORY_MAP.getOrDefault(product.getCategoryId(), "Unknown");
+        Label categoryLabel = new Label(categoryName);
         categoryLabel.setVisible(false);
 
         VBox productBox = new VBox(10, productImageView, nameLabel, priceLabel, showProductButton, categoryLabel);

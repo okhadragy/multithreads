@@ -3,20 +3,25 @@ package gui;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import Entity.Product;
 
 public class SelectProductPage {
     private final Central mainApp;
-    private static boolean ProductorCart;
+    private final Product product; // The product to display
+    private final boolean productorCart;
 
-    public SelectProductPage(Central mainApp, boolean check) {
+    public SelectProductPage(Central mainApp, Product product, boolean check) {
         this.mainApp = mainApp;
-        ProductorCart = check;
+        this.product = product; // Pass the selected product
+        this.productorCart = check; // Instance variable to avoid static misuse
     }
 
     public Scene getScene(Stage stage) {
@@ -25,143 +30,138 @@ public class SelectProductPage {
         BorderPane bp = new BorderPane();
         bp.setStyle("-fx-background-color: black;");
 
-        // nav
-
+        // Navigation bar
         Image logo = new Image(getClass().getResource("/assets/multithreadsLogo.png").toExternalForm());
-        ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(85);
-        logoView.setPreserveRatio(true);
+        ImageView logoView = createImageView(logo, 85);
 
-        Text cartButton = new Text("CART");
-        cartButton.setFill(Color.WHITE);
-        cartButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        HBox navbar = createNavbar(logoView);
+        bp.setTop(navbar);
 
-        Text productButton = new Text("PRODUCTS");
-        productButton.setFill(Color.WHITE);
-        productButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        // Product Details Layout
+        HBox productLayout = createProductLayout();
+        bp.setCenter(productLayout);
 
-        Text categoryButton = new Text("CATEGORIES");
-        categoryButton.setFill(Color.WHITE);
-        categoryButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        // Return Button
+        Button returnButton = createReturnButton();
 
-        Text ordersButton = new Text("ORDERS");
-        ordersButton.setFill(Color.WHITE);
-        ordersButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(bp, returnButton);
+        StackPane.setAlignment(returnButton, Pos.TOP_LEFT);
+        StackPane.setMargin(returnButton, new Insets(100, 0, 0, 20));
 
-        Text chatButton = new Text("CHAT");
-        chatButton.setFill(Color.WHITE);
-        chatButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        return new Scene(stackPane, 1366, 768);
+    }
 
-        HBox controlBox = new HBox(40);
-        controlBox.setAlignment(Pos.CENTER);
-        controlBox.getChildren().addAll(productButton, categoryButton, cartButton, ordersButton, chatButton);
+    private HBox createNavbar(ImageView logoView) {
+        Text cartButton = createNavButton("CART", () -> mainApp.showCartPage());
+        Text productButton = createNavButton("PRODUCTS", () -> mainApp.showProductPage());
+        Text categoryButton = createNavButton("CATEGORIES", () -> mainApp.showCategoryPage());
+        Text ordersButton = createNavButton("ORDERS", () -> mainApp.showOrdersPage());
+        Text chatButton = createNavButton("CHAT", () -> mainApp.showChatListPage());
 
-        HBox navbar = new HBox(50);
-        navbar.getChildren().addAll(logoView, controlBox);
-        navbar.setStyle("-fx-background-color: black;");
-        navbar.setAlignment(Pos.CENTER_LEFT);
-        navbar.setPadding(new Insets(15, 15, 15, 15));
-
-        Image navbarDeco = new Image(getClass().getResource("/assets/navDeco.png").toExternalForm());
-        ImageView navbarDecoView = new ImageView(navbarDeco);
-        VBox barAndDeco = new VBox();
-        barAndDeco.getChildren().addAll(navbar, navbarDecoView);
-
-        bp.setTop(barAndDeco);
-
-        productButton.setCursor(Cursor.HAND);
-        productButton.setOnMouseClicked(event -> {
-            mainApp.showProductPage();
-        });
-
-        categoryButton.setCursor(Cursor.HAND);
-        categoryButton.setOnMouseClicked(event -> {
-            mainApp.showCategoryPage();
-        });
-
-        cartButton.setCursor(Cursor.HAND);
-        cartButton.setOnMouseClicked(event -> {
-            mainApp.showCartPage();
-        });
-
-        ordersButton.setCursor(Cursor.HAND);
-        ordersButton.setOnMouseClicked(event -> {
-            mainApp.showOrdersPage();
-        });
-
-        chatButton.setCursor(Cursor.HAND);
-        chatButton.setOnMouseClicked(event -> {
-            mainApp.showChatListPage();
-        });
-
-        logoView.setCursor(Cursor.HAND);
         logoView.setOnMouseClicked(event -> {
             mainApp.getAuth().Logout();
             mainApp.showLoginPage();
         });
 
-        // content
+        HBox controlBox = new HBox(40, productButton, categoryButton, cartButton, ordersButton, chatButton);
+        controlBox.setAlignment(Pos.CENTER);
 
-        // Return Button as an Image
-        Image returnImage = new Image(getClass().getResource("/assets/back-button.png").toExternalForm());
-        ImageView returnImageView = new ImageView(returnImage);
-        returnImageView.setFitWidth(40);
-        returnImageView.setPreserveRatio(true);
+        HBox navbar = new HBox(50, logoView, controlBox);
+        navbar.setStyle("-fx-background-color: black;");
+        navbar.setPadding(new Insets(15));
+        return navbar;
+    }
+
+    private HBox createProductLayout() {
+        Image productImage = loadImage("/assets/m.png", "/assets/m.png"); // Load product image or fallback
+        ImageView productImageView = createImageView(productImage, 350);
+
+        VBox productInfo = new VBox(20);
+        productInfo.setAlignment(Pos.CENTER_LEFT);
+        productInfo.getChildren().addAll(
+                createText(product.getName(), 24, true, Color.WHITE),
+                createText(product.getDescription(), 16, false, Color.WHITE),
+                createText(product.getPrice() + " EGP", 20, true, Color.WHITE),
+                createText("Quantity in Stock: " + product.getQuantity(), 16, false, Color.WHITE),
+                createAddToCartButton()
+        );
+
+        HBox productLayout = new HBox(50, productImageView, productInfo);
+        productLayout.setAlignment(Pos.CENTER);
+        productLayout.setPadding(new Insets(50));
+        return productLayout;
+    }
+
+    private Button createAddToCartButton() {
+        Button addToCartButton = new Button("Add to Cart");
+        addToCartButton.setStyle("-fx-background-color: #006fff; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px;");
+        addToCartButton.setCursor(Cursor.HAND);
+        addToCartButton.setOnAction(e -> {
+            System.out.println("Attempting to add product to cart: " + product.getName());
+
+            try {
+                mainApp.getCustomerService().addToCart(mainApp.getCustomerService().getLoggedInUser().getUsername(), product.getId());
+                System.out.println("Product added to cart: " + product.getName());
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Product added to cart!", ButtonType.OK);
+                alert.show();
+            } catch (Exception ex) {
+                System.err.println("Error adding product to cart: " + ex.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to add product to cart.", ButtonType.OK);
+                alert.show();
+            }
+        });
+        return addToCartButton;
+    }
+
+    private Button createReturnButton() {
+        Image returnImage = loadImage("/assets/back-button.png", "/assets/back-button.png");
+        ImageView returnImageView = createImageView(returnImage, 40);
 
         Button returnButton = new Button();
         returnButton.setGraphic(returnImageView);
         returnButton.setStyle("-fx-background-color: transparent;");
         returnButton.setCursor(Cursor.HAND);
         returnButton.setOnAction(e -> {
-            if(ProductorCart == false) mainApp.showProductPage();
-            else mainApp.showCartPage();
+            if (!productorCart) {
+                mainApp.showProductPage();
+            } else {
+                mainApp.showCartPage();
+            }
         });
+        return returnButton;
+    }
 
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(bp);
+    private Text createNavButton(String text, Runnable action) {
+        Text navButton = new Text(text);
+        navButton.setFill(Color.WHITE);
+        navButton.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        navButton.setCursor(Cursor.HAND);
+        navButton.setOnMouseClicked(e -> action.run());
+        return navButton;
+    }
 
-        StackPane.setAlignment(returnButton, Pos.TOP_LEFT);
-        StackPane.setMargin(returnButton, new Insets(100, 0, 0, 20)); // Adjust margins as needed
-        stackPane.getChildren().add(returnButton);
-
-        HBox productLayout = new HBox(50);
-        productLayout.setAlignment(Pos.CENTER);
-        productLayout.setPadding(new Insets(50));
-
-        Image productImage = new Image(getClass().getResource("/assets/m.png").toExternalForm());
-        ImageView imageView = new ImageView(productImage);
-        imageView.setFitWidth(350);
+    private ImageView createImageView(Image image, double width) {
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(width);
         imageView.setPreserveRatio(true);
+        return imageView;
+    }
 
-        VBox productInfo = new VBox(20);
-        productInfo.setAlignment(Pos.CENTER_LEFT);
+    private Image loadImage(String path, String fallback) {
+        try {
+            return new Image(getClass().getResourceAsStream(path));
+        } catch (Exception e) {
+            System.err.println("Error loading image, using fallback: " + fallback);
+            return new Image(getClass().getResourceAsStream(fallback));
+        }
+    }
 
-        Text productTitle = new Text("Product Title");
-        productTitle.setFill(Color.WHITE);
-        productTitle.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-
-        Text productDescription = new Text("This is a sample product description. It gives details about the product.");
-        productDescription.setFill(Color.WHITE);
-        productDescription.setStyle("-fx-font-size: 16px;");
-
-        Text productPrice = new Text("$49.99");
-        productPrice.setFill(Color.WHITE);
-        productPrice.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-
-        Text productStock = new Text("Quantity in Stock: 25");
-        productStock.setFill(Color.WHITE);
-        productStock.setStyle("-fx-font-size: 16px;");
-
-        Button addToCartButton = new Button("Add to Cart");
-        addToCartButton.setStyle("-fx-background-color: #006fff; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-font-size: 14px;");
-        addToCartButton.setCursor(Cursor.HAND);
-
-        addToCartButton.setOnAction(e -> System.out.println("Product added to cart!"));
-
-        productInfo.getChildren().addAll(productTitle, productDescription, productPrice, productStock, addToCartButton);
-        productLayout.getChildren().addAll(imageView, productInfo);
-        bp.setCenter(productLayout);
-
-        return new Scene(stackPane, 1366, 768);
+    private Text createText(String content, int fontSize, boolean bold, Color color) {
+        Text text = new Text(content);
+        text.setFill(color);
+        text.setStyle("-fx-font-size: " + fontSize + "px; -fx-font-weight: " + (bold ? "bold" : "normal") + ";");
+        return text;
     }
 }
