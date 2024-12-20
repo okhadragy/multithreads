@@ -8,8 +8,8 @@ public class ProductService extends EntityService<Product> {
     private PermissionService permission;
     private CategoryService categoryService;
 
-    public ProductService(AuthService authService, PermissionService permission, CategoryService categoryService){
-        super("products",Product.class, authService);
+    public ProductService(AuthService authService, PermissionService permission, CategoryService categoryService) {
+        super("products", Product.class, authService);
         this.permission = permission;
         this.categoryService = categoryService;
     }
@@ -31,112 +31,85 @@ public class ProductService extends EntityService<Product> {
     }
 
     public String create(String name, String desc, String image, double price, String categoryId) {
-        if (permission.hasPermission("products", "create")) {
-            if (categoryId != null) {
-                if (categoryService.get(categoryId) == null){
-                    throw new IllegalArgumentException("this category doesn't exist");
-                }
-            }
-            String id = getEntityDAO().nextId();
-            getEntityDAO().add(new Product(id, name, desc, image, price, categoryId));
-            return id;
-        } else {
-            throw new RuntimeException("You don't have the permisson to do this action");
+        if (permission == null || !permission.hasPermission("products", "create")) {
+            throw new RuntimeException("Permission denied: Unable to create product.");
         }
-    }
 
-    public void create(String name, String desc, String image, double price, String categoryId, int quantity) {
-        if (permission.hasPermission("products", "create")) {
-            getEntityDAO().add(new Product(getEntityDAO().nextId(), name, desc, image, price, categoryId, quantity));
-        } else {
-            throw new RuntimeException("You don't have the permisson to do this action");
+        if (categoryId != null && categoryService.get(categoryId) == null) {
+            throw new IllegalArgumentException("Error: This category doesn't exist.");
         }
+
+        String id = getEntityDAO().nextId();
+        getEntityDAO().add(new Product(id, name, desc, image, price, categoryId));
+        return id;
     }
 
     public void delete(String id) {
-        if (permission.hasPermission("products", "delete")) {
-            getEntityDAO().delete(id);
-        }else {
-            throw new RuntimeException("You don't have the permisson to do this action");
+        if (permission == null || !permission.hasPermission("products", "delete")) {
+            throw new RuntimeException("Permission denied: Unable to delete product.");
         }
+
+        Product product = getEntityDAO().get(id);
+        if (product == null) {
+            throw new IllegalArgumentException("Error: Product not found.");
+        }
+
+        getEntityDAO().delete(id);
     }
 
-    public Product get(String id){
-        if (permission.hasPermission("products","retrieve")) {
-            Product product = getEntityDAO().get(id);
-            if (product == null) {
-                return null;  
-            }
-            return new Product(product);
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
+    public Product get(String id) {
+        if (permission == null || !permission.hasPermission("products", "retrieve")) {
+            throw new RuntimeException("Permission denied: Unable to retrieve product.");
         }
+
+        Product product = getEntityDAO().get(id);
+        return product != null ? new Product(product) : null;
     }
 
-    public <T> ArrayList<Product> filter(String paramater, T data){
-        if (permission.hasPermission("products","retrieve")) {
-            ArrayList<Product> products = new ArrayList<>();
-            if (!(paramater.toLowerCase() == "name" || paramater.toLowerCase()=="categoryid")) {
-                throw new IllegalArgumentException("This parameter doesn't exist");
-            }
+    public ArrayList<Product> getAll() {
+        if (permission == null || !permission.hasPermission("products", "retrieve")) {
+            throw new RuntimeException("Permission denied: Unable to retrieve products.");
+        }
 
-            for (Product product : getEntityDAO().getAll()) {
-                if (product.getName()!=null && product.getName().equals(data) && paramater.toLowerCase()=="name") {
-                    products.add(product);
-                }else if (product.getCategoryId()!=null && product.getCategoryId().equals(data) && paramater.toLowerCase()=="categoryid") {
-                    products.add(product);
+        return getEntityDAO().getAll();
+    }
+
+    public <T> void update(String id, String parameter, T newData) {
+        if (permission == null || !permission.hasPermission("products", "update")) {
+            throw new RuntimeException("Permission denied: Unable to update product.");
+        }
+
+        Product product = getEntityDAO().get(id);
+        if (product == null) {
+            throw new IllegalArgumentException("Error: This product doesn't exist.");
+        }
+
+        switch (parameter.toLowerCase()) {
+            case "name":
+                product.setName((String) newData);
+                break;
+            case "quantity":
+                product.setQuantity((int) newData);
+                break;
+            case "price":
+                product.setPrice((double) newData);
+                break;
+            case "description":
+                product.setDescription((String) newData);
+                break;
+            case "category":
+                if (newData != null && categoryService.get((String) newData) == null) {
+                    throw new IllegalArgumentException("Error: Category doesn't exist.");
                 }
-            }
-            return products;
-
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
+                product.setCategoryId((String) newData);
+                break;
+            case "image":
+                product.setImage((String) newData);
+                break;
+            default:
+                throw new IllegalArgumentException("Error: Invalid parameter for update.");
         }
-    }
 
-    public ArrayList<Product> getAll(){
-        if (permission.hasPermission("products","retrieve")) {
-            return getEntityDAO().getAll();
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
-        }
-    }
-
-    public <T> void update(String id,String parameter ,T newData) {
-        if (permission.hasPermission("products", "update")) {
-            Product product = getEntityDAO().get(id);
-            if (product == null) {
-                throw new IllegalArgumentException("This product doesn't exist.");  
-            }
-
-            switch (parameter.toLowerCase()) {
-                case "name":
-                    product.setName((String)newData);
-                    break;
-                case "quantity":
-                    product.setQuantity((int)newData);
-                    break;
-                case "price":
-                    product.setPrice((double)newData);
-                    break;
-                case "description":
-                    product.setDescription((String)newData);
-                    break;
-                case "category":
-                    if ((String)newData!=null) {
-                        categoryService.get((String)newData);
-                    }
-                    product.setCategoryId((String)newData);
-                    break;
-                case "image":
-                    product.setImage((String)newData);
-                    break;
-                default:
-                    throw new IllegalArgumentException("This parameter doesn't exist");
-            }
-            this.getEntityDAO().update(product);
-        }else{
-            throw new RuntimeException("You don't have the permisson to do this action");
-        }
+        getEntityDAO().update(product);
     }
 }

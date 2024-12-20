@@ -63,7 +63,7 @@ public class OrderService extends EntityService<Order> {
         if (permission.hasPermission("orders", "update")) {
             Order order = getEntityDAO().get(OrderID);
             if (order == null) {
-                throw new IllegalArgumentException("This order doesn't exist.");  
+                throw new IllegalArgumentException("This order doesn't exist.");
             }
             order.addProduct(ProductID);
             order.setProducts(order.getProducts());
@@ -78,13 +78,13 @@ public class OrderService extends EntityService<Order> {
         if (permission.hasPermission("orders", "update")) {
             Order order = getEntityDAO().get(OrderID);
             if (order == null) {
-                throw new IllegalArgumentException("This order doesn't exist.");  
+                throw new IllegalArgumentException("This order doesn't exist.");
             }
             order.removeProduct(ProductID);
             order.setProducts(order.getProducts());
             order.setTotal(calcTotal(order.getProducts()));
             getEntityDAO().update(order);
-            
+
         } else {
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -96,7 +96,7 @@ public class OrderService extends EntityService<Order> {
             getEntityDAO().add(new Order(id, customer, products, calcTotal(products), paymentMethod, status));
             return id;
         }
-        
+
         if (permission.hasPermission("orders", "create")) {
             if (customerService.get(customer) == null){
                 throw new IllegalArgumentException("This customer doesn't exist");
@@ -121,7 +121,7 @@ public class OrderService extends EntityService<Order> {
         if (permission.hasPermission("orders","retrieve")) {
             Order order = getEntityDAO().get(OrderID);
             if (order == null) {
-                throw null;  
+                throw null;
             }
             return new Order(order);
         }else{
@@ -165,7 +165,7 @@ public class OrderService extends EntityService<Order> {
     public void convertToOrder(String OrderID) {
         Order cart = getEntityDAO().get(OrderID);
         if (cart == null) {
-            throw new IllegalArgumentException("This cart doesn't exist.");  
+            throw new IllegalArgumentException("This cart doesn't exist.");
         }
         if (permission.hasPermission("orders", "update")|| cart.getCustomer().equals(getLoggedInUser().getUsername())) {
             if (cart.getStatus().equals(Status.draft)) {
@@ -179,7 +179,7 @@ public class OrderService extends EntityService<Order> {
             }else{
                 throw new RuntimeException("This is already an order.");
             }
-            
+
         }else {
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -191,7 +191,7 @@ public class OrderService extends EntityService<Order> {
             throw new IllegalArgumentException("this order doesn't exist.");
         }
 
-        if (permission.hasPermission("orders", "update") || order.getCustomer().equals(getLoggedInUser().getUsername())) {    
+        if (permission.hasPermission("orders", "update") || order.getCustomer().equals(getLoggedInUser().getUsername())) {
             if (!order.getProducts().isEmpty()) {
                 if (order.getStatus().equals(Status.processing)) {
                     order.setPaymentMethod(payMeth);
@@ -222,7 +222,7 @@ public class OrderService extends EntityService<Order> {
             }else{
                 throw new RuntimeException("This order hasn't been shipped.");
             }
-            
+
         }else {
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -251,7 +251,7 @@ public class OrderService extends EntityService<Order> {
         if (order == null) {
             throw new IllegalArgumentException("this order doesn't exist.");
         }
-        
+
         if (permission.hasPermission("orders", "update")|| order.getCustomer().equals(getLoggedInUser().getUsername())) {
             if (!order.getStatus().equals(Status.closed)) {
                 order.setStatus(Status.cancelled);
@@ -262,6 +262,15 @@ public class OrderService extends EntityService<Order> {
         }else {
             throw new RuntimeException("You don't have the permisson to do this action");
         }
+    }
+
+    public void setStatus(String OrderID, Status status) {
+        Order order = getEntityDAO().get(OrderID);
+        if (order == null) {
+            throw new IllegalArgumentException("this order doesn't exist.");
+        }
+
+        order.setStatus(status);
     }
 
 }

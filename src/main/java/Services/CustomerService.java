@@ -45,13 +45,13 @@ public class CustomerService extends EntityService<Customer> {
         this.orderService = orderService;
     }
 
-    public String create(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender) {        
+    public String create(String username, String password, java.util.Date dateOfBirth, double balance, String address, Gender gender) {
         if (permission.hasPermission("customers", "create")||getLoggedInUser()==null) {
             if (getEntityDAO().getIndex(username)!=-1) {
                 throw new IllegalArgumentException("This username is used");
             }
 
-            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>());    
+            Customer user = new Customer(username,password,dateOfBirth,balance,address,gender,new ArrayList<>());
             getEntityDAO().add(user);
             String cartId = orderService.create(username, new HashMap<>(), null, Status.draft);
             user.setCartId(cartId);
@@ -66,7 +66,7 @@ public class CustomerService extends EntityService<Customer> {
         if (permission.hasPermission("customers", "delete")) {
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
             this.getEntityDAO().delete(username);
             orderService.delete(customer.getCartId());
@@ -83,7 +83,7 @@ public class CustomerService extends EntityService<Customer> {
             }
             return new Customer(customer);
         }
-        
+
         if (permission.hasPermission("customers","retrieve")|| getLoggedInUser().equals(getEntityDAO().get(username))) {
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
@@ -107,7 +107,7 @@ public class CustomerService extends EntityService<Customer> {
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))) {
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
 
             switch (parameter.toLowerCase()) {
@@ -134,9 +134,9 @@ public class CustomerService extends EntityService<Customer> {
             productService.get(productId);
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
-
+System.out.println(customer.getCartId());
             orderService.addItem(customer.getCartId(), productId);
         }else{
             throw new RuntimeException("You don't have the permisson to do this action");
@@ -148,7 +148,7 @@ public class CustomerService extends EntityService<Customer> {
             productService.get(productId);
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
             orderService.deleteItem(customer.getCartId(), productId);
         }else{
@@ -160,7 +160,7 @@ public class CustomerService extends EntityService<Customer> {
         if (permission.hasPermission("customers", "update")||getLoggedInUser().equals(getEntityDAO().get(username))){
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
             return orderService.get(customer.getCartId()).getProducts();
         }else{
@@ -173,7 +173,7 @@ public class CustomerService extends EntityService<Customer> {
             productService.get(productId);
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
             ArrayList<String> products = customer.getInterests();
             if (products.contains(productId)) {
@@ -192,7 +192,7 @@ public class CustomerService extends EntityService<Customer> {
             productService.get(productId);
             Customer customer = getEntityDAO().get(username);
             if (customer == null) {
-                throw new IllegalArgumentException("This customer doesn't exist.");  
+                throw new IllegalArgumentException("This customer doesn't exist.");
             }
             ArrayList<String> products = customer.getInterests();
             products.remove(productId);
