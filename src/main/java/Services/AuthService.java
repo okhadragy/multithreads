@@ -74,7 +74,7 @@ public class AuthService {
             throw new RuntimeException("can't sign up while you are logged in");
         }
 
-        customerService.create(username, password, dateOfBirth, 0, address, gender);
+        customerService.create(username, password, dateOfBirth, 1000, address, gender);
         loggedInUser = customerService.get(username);
     }
 

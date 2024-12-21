@@ -2,6 +2,8 @@ package Services;
 
 import Entity.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 final class EntityDAO<E extends Entity> {
     private final Database<E> db;
@@ -88,7 +90,8 @@ final class EntityDAO<E extends Entity> {
     }
 
     public String nextId(){
-        return String.valueOf(entities.size()+1);
+        entities.sort(Comparator.comparingInt(o -> Integer.parseInt((String)(o.getKey()))));
+        return String.valueOf(Integer.parseInt((String)(entities.get(entities.size()-1).getKey()))+1);
     }
 
 }

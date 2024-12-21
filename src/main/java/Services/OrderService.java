@@ -161,7 +161,7 @@ public class OrderService extends EntityService<Order> {
         }
     }
 
-    public void convertToOrder(String OrderID) {
+    public String convertToOrder(String OrderID) {
         Order cart = getEntityDAO().get(OrderID);
         if (cart == null) {
             throw new IllegalArgumentException("This cart doesn't exist.");
@@ -169,13 +169,18 @@ public class OrderService extends EntityService<Order> {
         if (permission.hasPermission("orders", "update")
                 || cart.getCustomer().equals(getLoggedInUser().getUsername())) {
             if (cart.getStatus().equals(Status.draft)) {
+                if (cart.getProducts().isEmpty()) {
+                    throw new RuntimeException("This cart is Empty.");
+                }
                 Order order = new Order(cart);
                 cart.setProducts(new HashMap<>());
                 cart.setTotal(0);
                 order.setId(getEntityDAO().nextId());
                 order.setStatus(Status.processing);
+                System.out.println(order.getId());
                 getEntityDAO().update(cart);
                 getEntityDAO().add(order);
+                return order.getId();
             } else {
                 throw new RuntimeException("This is already an order.");
             }
@@ -193,17 +198,19 @@ public class OrderService extends EntityService<Order> {
 
         if (permission.hasPermission("orders", "update")
                 || order.getCustomer().equals(getLoggedInUser().getUsername())) {
-            if (!order.getProducts().isEmpty()) {
-                if (order.getStatus().equals(Status.processing)) {
-                    order.setPaymentMethod(payMeth);
-                    Customer customer = customerService.get(order.getCustomer());
-                    customerService.update(order.getCustomer(), "balance", customer.getBalance() - order.getTotal());
-                    order.setStatus(Status.shipping);
-                    getEntityDAO().update(order);
-                } else
-                    throw new RuntimeException("Can't pay for this order");
+            if (order.getProducts().isEmpty()) {
+                throw new RuntimeException("This order is Empty.");
+            }
+
+            if (order.getStatus().equals(Status.processing)) {
+                order.setPaymentMethod(payMeth);
+                Customer customer = customerService.get(order.getCustomer());
+                customerService.update(order.getCustomer(), "balance", customer.getBalance() - order.getTotal());
+                order.setStatus(Status.shipping);
+                getEntityDAO().update(order);
             } else
-                throw new RuntimeException("the order doesn't have any products.");
+                throw new RuntimeException("Can't pay for this order");
+
         } else {
             throw new RuntimeException("You don't have the permisson to do this action");
         }
@@ -254,8 +261,10 @@ public class OrderService extends EntityService<Order> {
             throw new IllegalArgumentException("this order doesn't exist.");
         }
 
-        if (permission.hasPermission("orders", "update") || order.getCustomer().equals(getLoggedInUser().getUsername())) {
-            if (!(order.getStatus().equals(Status.closed)||order.getStatus().equals(Status.draft)||order.getStatus().equals(Status.cancelled))) {
+        if (permission.hasPermission("orders", "update")
+                || order.getCustomer().equals(getLoggedInUser().getUsername())) {
+            if (!(order.getStatus().equals(Status.closed) || order.getStatus().equals(Status.draft)
+                    || order.getStatus().equals(Status.cancelled))) {
                 order.setStatus(Status.cancelled);
                 getEntityDAO().update(order);
             } else {

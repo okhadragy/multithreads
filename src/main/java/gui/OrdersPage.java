@@ -149,7 +149,6 @@ public class OrdersPage {
                 cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getTotal())));
 
         Button cancelButton = new Button("Cancel");
-        Button showButton = new Button("Show");
 
         cancelButton.setOnAction(event -> {
             Order selectedOrder = tableView.getSelectionModel().getSelectedItem();
@@ -163,12 +162,7 @@ public class OrdersPage {
             }
         });
 
-        showButton.setOnAction(event -> {
-            Order selectedOrder = tableView.getSelectionModel().getSelectedItem();
-            if (selectedOrder != null) {
-                String orderId = selectedOrder.getId();
-            }
-        });
+        
 
 
         // this changes the color and this is the only thing i understand lol
@@ -187,7 +181,7 @@ public class OrdersPage {
 
         VBox vertical = new VBox(20);
         HBox hbox = new HBox(15);
-        hbox.getChildren().addAll(cancelButton,showButton);
+        hbox.getChildren().addAll(cancelButton);
         vertical.getChildren().addAll(tableView, hbox);
         VBox.setMargin(hbox, new Insets(0, 0, 0, 15));
         bp.setCenter(vertical);

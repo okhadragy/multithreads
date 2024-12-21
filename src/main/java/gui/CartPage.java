@@ -216,21 +216,26 @@ public class CartPage {
         orderButton.setOnMouseClicked(event -> {
             if (paymentMethodComboBox.getValue() == "Select Payment Method..") {
                 warning.setText("Please select a payment method!");
-            } else if (false) {
-                // add to condition in case the cart is empty
-                warning.setText("Cart is empty!");
             } else {
                 String cartId = mainApp.getCustomerService().get(mainApp.getCustomerService().getLoggedInUser().getUsername()).getCartId();
-                mainApp.getOrderService().convertToOrder(cartId);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeight(600);
-                alert.setTitle("Order Confirmation");
-                alert.setHeaderText("ORDER ID: " + cartId);
-                alert.setContentText("Your order has been placed successfully.\n"
-                        + "\nYou can expect your items to be shipped within the next 2-3 business days.");
-                warning.setText("");
-                alert.showAndWait();
-                mainApp.showCategoryPage();
+                try {
+                    String orderId = mainApp.getOrderService().convertToOrder(cartId);
+                    mainApp.getOrderService().pay(orderId, PaymentMethod.valueOf(paymentMethodComboBox.getValue()));
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeight(600);
+                    alert.setTitle("Order Confirmation");
+                    alert.setHeaderText("ORDER ID: " + cartId);
+                    alert.setContentText("Your order has been placed successfully.\n"
+                            + "\nYou can expect your items to be shipped within the next 2-3 business days.");
+                    warning.setText("");
+                    alert.showAndWait();
+                    mainApp.showCategoryPage();
+                } catch (IllegalArgumentException e) {
+                    warning.setText("Your balance is not enough");
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                    warning.setText("Cart is empty!");
+                }
             }
         });
 

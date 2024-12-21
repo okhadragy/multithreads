@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+
 public class AdminOrdersPage {
 
     private final Central mainApp;
@@ -154,9 +155,26 @@ public class AdminOrdersPage {
                     Order selectedOrder = getTableView().getItems().get(getIndex());
                     Status status = statusDropdown.getValue();
                     if (selectedOrder != null && status != null) {
-                        // Update the order's status
-                        mainApp.getOrderService().setStatus(selectedOrder.getId(), status); // Update in the service/database
-                        selectedOrder.setStatus(status); // Update the status in the local object
+                        if(status.equals(Status.draft)){
+                            mainApp.getOrderService().setStatus(selectedOrder.getId(),status);
+                        }
+                        if(status.equals(Status.processing)){
+                            mainApp.getOrderService().setStatus(selectedOrder.getId(),status);
+                        }
+                        if(status.equals(Status.shipping)){
+                            mainApp.getOrderService().pay(selectedOrder.getId(), selectedOrder.getPaymentMethod());
+                        }
+                        if(status.equals(Status.delivered)){
+                            mainApp.getOrderService().deliver(selectedOrder.getId());
+                        }
+                        if(status.equals(Status.closed)){
+                            mainApp.getOrderService().close(selectedOrder.getId());
+                        }
+                        if(status.equals(Status.cancelled)){
+                            mainApp.getOrderService().cancel(selectedOrder.getId());
+                        }
+                       
+                        //selectedOrder.setStatus(status); // Update the status in the local object
                         tableView.refresh(); // Refresh the table view to reflect changes
                     }
                 });
@@ -175,6 +193,7 @@ public class AdminOrdersPage {
             }
         });
         
+
 
         for (Order order : mainApp.getOrderService().getAll()){
             tableView.getItems().add(order);
