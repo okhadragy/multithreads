@@ -1,7 +1,7 @@
 package gui;
 
 import java.util.Stack;
-
+import Entity.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +23,7 @@ public class AdminCategoriesPage {
         this.mainApp = mainApp;
     }
 
-    public Scene getScene(Stage stage){
+    public Scene getScene(Stage stage) {
 
         BorderPane bp = new BorderPane();
         bp.setStyle("-fx-background-color: black;");
@@ -32,10 +32,11 @@ public class AdminCategoriesPage {
         ScrollPane sp = new ScrollPane(bp);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // remove horizontal bar
         Platform.runLater(() -> sp.lookup(".viewport").setStyle("-fx-background-color: transparent;"));
-        // when the viewport loads in set its style to transparent so it doesn't affect scrollpane styling
+        // when the viewport loads in set its style to transparent so it doesn't affect
+        // scrollpane styling
         sp.setFitToWidth(true); // extend the scrollpane on the entire view
         sp.setStyle("-fx-background-color: black; -fx-border-color: transparent"); // make it black
-        
+
         // nav
 
         Image logo = new Image(getClass().getResource("/assets/multithreadsLogo.png").toExternalForm());
@@ -112,8 +113,97 @@ public class AdminCategoriesPage {
         });
 
         // content
+        TableView<Category> tableView = new TableView<>();
 
-        
+        TableColumn<Category, String> nameColumn = new TableColumn<>("Category Name");
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+
+        TableColumn<Category, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+
+        TableColumn<Category, String> IDColumn = new TableColumn<>("ID");
+        IDColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+
+        Button deleteButton = new Button("Remove Category");
+        Button editButton = new Button("Edit Category");
+
+        deleteButton.setOnAction(event -> {
+            Category selectedCat = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCat != null) {
+                String catId = selectedCat.getId();
+                mainApp.getCategoryService().delete(catId);
+                tableView.getItems().remove(selectedCat);
+            }
+        });
+
+        editButton.setOnAction(event -> {
+            Category selectedCat = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCat != null) {
+                String catId = selectedCat.getId();
+            }
+        });
+
+        tableView.getColumns().addAll(nameColumn, descriptionColumn, IDColumn);
+
+        for (Category category : mainApp.getCategoryService().getAll()) {
+            tableView.getItems().add(category);
+        }
+        // NEW CODE
+
+        VBox vertical = new VBox(20);
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(20));
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        HBox hbox = new HBox(15);
+        hbox.getChildren().addAll(deleteButton,editButton);
+        vertical.getChildren().addAll(tableView, hbox, gridPane);
+        VBox.setMargin(hbox, new Insets(0, 0, 0, 15));
+
+        Text descriptionLabel = new Text("Description:");
+        descriptionLabel.setFill(Color.WHITE);
+        TextField descriptionField = new TextField();
+
+        Text nameLabel = new Text("Name:");
+        nameLabel.setFill(Color.WHITE);
+        TextField nameField = new TextField();
+
+        gridPane.add(descriptionLabel, 0, 0);
+        gridPane.add(descriptionField, 1, 0);
+        descriptionField.setPrefWidth(300);
+        descriptionField.setPrefHeight(60);
+        gridPane.add(nameLabel, 0, 1);
+        gridPane.add(nameField, 1, 1);
+        Text warning = new Text();
+        gridPane.add(warning, 1, 3);
+        warning.setFill(Color.RED);
+
+        Button submitButton = new Button("Add Category");
+        gridPane.add(submitButton, 1, 2);
+
+        submitButton.setOnAction(event -> {
+            String description = descriptionField.getText();
+            String name = nameField.getText();
+
+            if (description.isEmpty()) {
+                warning.setText("Description can't be empty");
+                return;
+            }
+            if (name.isEmpty()) {
+                warning.setText("Name can't be empty");
+                return;
+            }
+            mainApp.getCategoryService().create(name, description);
+            // e3ml hena el operation ely htzwd el category gowa el database
+
+            stage.setScene(getScene(stage)); // refresh page
+        });
+
+        gridPane.setAlignment(Pos.CENTER);
+        bp.setCenter(vertical);
+        // NEW CODE
+        // line el setCenter tl3 fo2
 
         // bp.setCenter(tableView);
 
