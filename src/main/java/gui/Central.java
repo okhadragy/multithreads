@@ -124,18 +124,15 @@ public class Central extends Application {
         primaryStage.setScene(categoryPage.getScene(primaryStage));
     }
 
-    public void showProductPage() {
+    public void showProductPage(String SelectedCategory) {
         ProductPage productPage = new ProductPage(this);
-        primaryStage.setScene(productPage.getScene(primaryStage));
+        primaryStage.setScene(productPage.getScene(primaryStage, SelectedCategory));
     }
 
     public void showSelectProductPage(Product product, boolean check) {
         SelectProductPage selectProductPage = new SelectProductPage(this, product, check);
         primaryStage.setScene(selectProductPage.getScene(primaryStage));
     }
-
-
-
 
     public void showCartPage(){
         CartPage cartPage = new CartPage(this);
@@ -181,24 +178,7 @@ public class Central extends Application {
         primaryStage.setScene(adminOrdersPage.getScene(primaryStage));
     }
 
-    /* 
-    private void close(){
-        if (clients != null) {
-            for (Client client : clients) {
-                System.out.println("biuuig");
-                client.closeConnection();
-            }
-        }
-    }
-    
-    @Override
-    public void stop() {
-        close();
-    }
-    */
-
     public static void main(String[] args) {
         launch(args);
     }
 }
-
