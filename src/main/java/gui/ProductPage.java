@@ -241,7 +241,8 @@ public class ProductPage {
     private VBox createProductBox(Product product) {
         Image productImage;
         try {
-            productImage = new Image("/assets/m.png");
+            System.out.println(product.getImage());
+            productImage = new Image(getClass().getResourceAsStream(product.getImage()));
         } catch (Exception e) {
             productImage = new Image(getClass().getResourceAsStream("/assets/m.png"));
         }

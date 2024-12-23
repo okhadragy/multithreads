@@ -74,7 +74,7 @@ public class SelectProductPage {
     }
 
     private HBox createProductLayout() {
-        Image productImage = loadImage("/assets/m.png", "/assets/m.png"); // Load product image or fallback
+        Image productImage = loadImage(product.getImage(), "/assets/m.png"); // Load product image or fallback
         ImageView productImageView = createImageView(productImage, 350);
 
         VBox productInfo = new VBox(20);

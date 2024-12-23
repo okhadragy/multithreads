@@ -1,14 +1,14 @@
 package gui;
 
 import java.util.Stack;
-
+import Entity.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
@@ -32,7 +32,6 @@ public class AdminUsersPage {
         ScrollPane sp = new ScrollPane(bp);
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // remove horizontal bar
         Platform.runLater(() -> sp.lookup(".viewport").setStyle("-fx-background-color: transparent;"));
-        // when the viewport loads in set its style to transparent so it doesn't affect scrollpane styling
         sp.setFitToWidth(true); // extend the scrollpane on the entire view
         sp.setStyle("-fx-background-color: black; -fx-border-color: transparent"); // make it black
         
@@ -112,12 +111,182 @@ public class AdminUsersPage {
         });
 
         // content
+        TableView<Customer> tableView = new TableView<>();
 
-        
+        TableColumn<Customer, String> usernameColumn = new TableColumn<>("Username");
+        usernameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
 
-        // bp.setCenter(tableView);
+        TableColumn<Customer, String> balanceColumn = new TableColumn<>("Balance");
+        balanceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getBalance())));
+
+        TableColumn<Customer, String> addressColumn = new TableColumn<>("Address");
+        addressColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
+
+        TableColumn<Customer, String> genderColumn = new TableColumn<>("Gender");
+        genderColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGender().toString()));
+
+        tableView.getColumns().addAll(usernameColumn, balanceColumn, addressColumn, genderColumn);
+
+        for (Customer customer : mainApp.getCustomerService().getAll()) {
+            tableView.getItems().add(customer);
+        }
+
+        // Delete button
+        Button deleteButton = new Button("Delete Selected User");
+        deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+        deleteButton.setCursor(Cursor.HAND);
+        deleteButton.setOnAction(event -> {
+            Customer selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                mainApp.getCustomerService().delete(selectedCustomer.getUsername());
+                tableView.getItems().remove(selectedCustomer);
+            }
+        });
+
+        // Edit Address button
+        Button editAddressButton = new Button("Edit Address");
+        editAddressButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        editAddressButton.setCursor(Cursor.HAND);
+        editAddressButton.setOnAction(event -> {
+            Customer selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                showEditAddressDialog(selectedCustomer, tableView);
+            }
+        });
+
+        // Edit Password button
+        Button editPasswordButton = new Button("Edit Password");
+        editPasswordButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        editPasswordButton.setCursor(Cursor.HAND);
+        editPasswordButton.setOnAction(event -> {
+            Customer selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                showEditPasswordDialog(selectedCustomer, tableView);
+            }
+        });
+
+        // Edit Balance button
+        Button editBalanceButton = new Button("Edit Balance");
+        editBalanceButton.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        editBalanceButton.setCursor(Cursor.HAND);
+        editBalanceButton.setOnAction(event -> {
+            Customer selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                showEditBalanceDialog(selectedCustomer, tableView);
+            }
+        });
+
+        // Layout for the table and buttons
+        VBox contentBox = new VBox(10);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.getChildren().addAll(tableView, editAddressButton, editPasswordButton, editBalanceButton, deleteButton);
+
+        bp.setCenter(contentBox);
 
         return new Scene(sp, 1366, 768);
+    }
 
+    private void showEditAddressDialog(Customer selectedCustomer, TableView<Customer> tableView) {
+        // Create a dialog for editing the address
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Edit Address");
+
+        // Label and text field for new address
+        Label label = new Label("Enter new address:");
+        TextField textField = new TextField(selectedCustomer.getAddress());
+        
+        // Button to save the new address
+        Button saveButton = new Button("Save");
+        saveButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        saveButton.setOnAction(saveEvent -> {
+            String newAddress = textField.getText().trim();
+            if (!newAddress.isEmpty() && !newAddress.equals(selectedCustomer.getAddress())) {
+                selectedCustomer.setAddress(newAddress);
+                tableView.refresh();
+                mainApp.getCustomerService().update(selectedCustomer.getUsername(), "address", newAddress);
+                dialog.close();
+            }
+        });
+
+        // Layout for the dialog
+        VBox dialogLayout = new VBox(10);
+        dialogLayout.setAlignment(Pos.CENTER);
+        dialogLayout.getChildren().addAll(label, textField, saveButton);
+
+        Scene dialogScene = new Scene(dialogLayout, 300, 150);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    private void showEditPasswordDialog(Customer selectedCustomer, TableView<Customer> tableView) {
+        // Create a dialog for editing the password
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Edit Password");
+
+        // Label and text field for new password
+        Label label = new Label("Enter new password:");
+        PasswordField passwordField = new PasswordField();
+        
+        // Button to save the new password
+        Button saveButton = new Button("Save");
+        saveButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        saveButton.setOnAction(saveEvent -> {
+            String newPassword = passwordField.getText().trim();
+            if (!newPassword.isEmpty()) {
+                selectedCustomer.setPassword(newPassword);
+                tableView.refresh();
+                mainApp.getCustomerService().update(selectedCustomer.getUsername(), "password", newPassword);
+                dialog.close();
+            }
+        });
+
+        // Layout for the dialog
+        VBox dialogLayout = new VBox(10);
+        dialogLayout.setAlignment(Pos.CENTER);
+        dialogLayout.getChildren().addAll(label, passwordField, saveButton);
+
+        Scene dialogScene = new Scene(dialogLayout, 300, 150);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    private void showEditBalanceDialog(Customer selectedCustomer, TableView<Customer> tableView) {
+        // Create a dialog for editing the balance
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Edit Balance");
+
+        // Label and text field for new balance
+        Label label = new Label("Enter new balance:");
+        TextField textField = new TextField(String.valueOf(selectedCustomer.getBalance()));
+        
+        // Button to save the new balance
+        Button saveButton = new Button("Save");
+        saveButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        saveButton.setOnAction(saveEvent -> {
+            String newBalanceStr = textField.getText().trim();
+            try {
+                double newBalance = Double.parseDouble(newBalanceStr);
+                selectedCustomer.setBalance(newBalance);
+                tableView.refresh();
+                mainApp.getCustomerService().update(selectedCustomer.getUsername(), "balance", newBalance);
+                dialog.close();
+            } catch (NumberFormatException e) {
+                // Show error if the balance is not a valid number
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter a valid balance.");
+                alert.showAndWait();
+            }
+        });
+
+        // Layout for the dialog
+        VBox dialogLayout = new VBox(10);
+        dialogLayout.setAlignment(Pos.CENTER);
+        dialogLayout.getChildren().addAll(label, textField, saveButton);
+
+        Scene dialogScene = new Scene(dialogLayout, 300, 150);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 }

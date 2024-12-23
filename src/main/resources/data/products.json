@@ -1,1 +1,182 @@
-[{"id":"1","name":"T-shirt","description":"A classic, comfortable cotton T-shirt perfect for everyday wear.","price":6.0,"categoryId":"2","quantity":10},{"id":"2","name":"Sneakers","description":"Stylish and comfortable sneakers suitable for casual outings or light workouts.","price":60.0,"categoryId":"4","quantity":30},{"id":"4","name":"Hoodie","description":"A cozy and warm hoodie, perfect for layering or chilly days.","price":40.0,"categoryId":"1","quantity":25},{"id":"5","name":"Jeans","description":"Durable and stylish denim jeans, a versatile addition to any wardrobe.","price":50.0,"categoryId":"3","quantity":40},{"id":"6","name":"Sandals","description":"Comfortable and breathable sandals, ideal for warm weather and casual wear.","price":30.0,"categoryId":"4","quantity":15},{"id":"7","name":"Tank Top","description":"A lightweight and breathable tank top, perfect for workouts or hot days.","price":15.0,"categoryId":"2","quantity":60},{"id":"8","name":"Formal Shoes","description":"Elegant leather formal shoes, perfect for special occasions or professional settings.","price":90.0,"categoryId":"4","quantity":10},{"id":"9","name":"Cargo Pants","description":"Functional and stylish cargo pants with ample pocket space.","price":55.0,"categoryId":"3","quantity":35},{"id":"10","name":"Graphic Tee","description":"A comfortable T-shirt featuring a unique and eye-catching graphic design.","price":25.0,"categoryId":"2","quantity":45},{"id":"11","name":"Flip Flops","description":"Simple and comfortable flip flops, perfect for the beach or casual wear.","price":10.0,"categoryId":"4","quantity":50},{"id":"13","name":"Track Pants","description":"Comfortable and flexible track pants, ideal for workouts or lounging.","price":40.0,"categoryId":"3","quantity":30},{"id":"14","name":"Ankle Boots","description":"Stylish and versatile ankle boots that can be dressed up or down.","price":100.0,"categoryId":"4","quantity":15},{"id":"15","name":"Crop Top","description":"A trendy and fashionable crop top, perfect for warm weather or layering.","price":18.0,"categoryId":"2","quantity":40},{"id":"16","name":"Raincoat","description":"A waterproof and windproof raincoat to keep you dry and comfortable in wet weather.","price":70.0,"categoryId":"3","quantity":15},{"id":"17","name":"Pullover","description":"A comfortable and stylish pullover, perfect for layering or cooler days.","price":55.0,"categoryId":"1","quantity":20},{"id":"18","name":"Running Shoes","description":"High-performance running shoes designed for comfort and support during workouts.","price":85.0,"categoryId":"4","quantity":25},{"id":"20","name":"Long Sleeve Shirt","description":"A versatile long sleeve shirt that can be dressed up or down.","price":28.0,"categoryId":"2","quantity":40},{"id":"21","name":"Dress Shoes","description":"Sophisticated dress shoes suitable for formal events and special occasions.","price":95.0,"categoryId":"4","quantity":10},{"id":"22","name":"Sweatpants","description":"Soft and comfortable sweatpants, perfect for lounging or casual wear.","price":35.0,"categoryId":"3","quantity":30},{"id":"23","name":"Slip-Ons","description":"Convenient and comfortable slip-on shoes for everyday wear.","price":45.0,"categoryId":"4","quantity":20},{"id":"24","name":"Blazer","description":"A stylish and sophisticated blazer that can elevate any outfit.","price":120.0,"categoryId":"3","quantity":10},{"id":"25","name":"Button-Up Shirt","description":"A classic button-up shirt suitable for both casual and formal occasions.","price":35.0,"categoryId":"2","quantity":50},{"id":"27","name":"High Heels","description":"Elegant high heels that add a touch of sophistication to any outfit.","price":110.0,"categoryId":"4","quantity":12},{"id":"28","name":"Chinos","description":"Versatile and comfortable chinos, a great alternative to jeans.","price":45.0,"categoryId":"3","quantity":35},{"id":"29","name":"Basic Tee","description":"An essential basic tee, perfect for layering or wearing on its own.","price":12.0,"categoryId":"2","quantity":100},{"id":"30","name":"Chelsea Boots","description":"Stylish and timeless Chelsea boots that can be dressed up or down.","price":130.0,"categoryId":"4","quantity":20},{"id":"32","name":"Formal Pants","description":"Elegant formal pants suitable for professional settings or special occasions.","price":60.0,"categoryId":"3","quantity":25},{"id":"33","name":"Graphic Hoodie","description":"A comfortable hoodie featuring a unique and stylish graphic design.","price":45.0,"categoryId":"1","quantity":30},{"id":"34","name":"Athletic Shorts","description":"Lightweight and breathable athletic shorts, perfect for workouts or activewear.","price":25.0,"categoryId":"3","quantity":50},{"id":"35","name":"Slip Dress","description":"A stylish and comfortable slip dress, perfect for a night out or special occasion.","price":65.0,"categoryId":"2","quantity":20},{"id":"36","name":"Espadrilles","description":"Comfortable and stylish espadrilles, perfect for warm weather and casual outings.","price":40.0,"categoryId":"4","quantity":25},{"id":"37","name":"Peacoat","description":"A classic and stylish peacoat, perfect for staying warm and fashionable in colder weather.","price":120.0,"categoryId":"3","quantity":10},{"id":"38","name":"Shorts","description":"Comfortable and versatile shorts, suitable for a variety of occasions.","price":30.0,"categoryId":"3","quantity":40},{"id":"39","name":"Knit Cap","description":"A warm and cozy knit cap, perfect for keeping your head warm in cold weather.","price":15.0,"categoryId":"1","quantity":50},{"id":"41","name":"Hiking Boots","description":"Durable and supportive hiking boots designed for outdoor adventures.","price":120.0,"categoryId":"4","quantity":20},{"id":"42","name":"Polo Shirt","description":"A classic and versatile polo shirt, suitable for both casual and smart-casual occasions.","price":40.0,"categoryId":"2","quantity":50},{"id":"43","name":"Windbreaker","description":"A lightweight and water-resistant windbreaker, perfect for outdoor activities.","price":65.0,"categoryId":"3","quantity":20},{"id":"44","name":"Wide-Leg Pants","description":"Stylish and comfortable wide-leg pants, a fashionable alternative to traditional trousers.","price":55.0,"categoryId":"3","quantity":25},{"id":"45","name":"Crewneck Sweater","description":"A classic and comfortable crewneck sweater, perfect for layering or wearing on its own.","price":35.0,"categoryId":"1","quantity":30},{"id":"46","name":"Moccasins","description":"Comfortable and stylish moccasins, perfect for casual wear or lounging.","price":80.0,"categoryId":"4","quantity":15},{"id":"47","name":"Dress Shirt","description":"A sophisticated dress shirt, perfect for formal occasions or professional settings.","price":50.0,"categoryId":"2","quantity":30},{"id":"50","name":"Running Shorts","description":"Lightweight and breathable running shorts designed for optimal performance during workouts.","price":25.0,"categoryId":"3","quantity":40}]
+[
+  {
+    "id": "1",
+    "name": "White Hoodie",
+    "price": 40.0,
+    "categoryId": "1",
+    "quantity": 30,
+    "description": "A white hoodie for a clean and classic look.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\whitehoodie.png"
+  },
+  {
+    "id": "2",
+    "name": "Blue Hoodie",
+    "price": 45.0,
+    "categoryId": "1",
+    "quantity": 25,
+    "description": "A cozy blue hoodie for everyday comfort.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\bluehoodie.png"
+  },
+  {
+    "id": "3",
+    "name": "Pink Hoodie",
+    "price": 50.0,
+    "categoryId": "1",
+    "quantity": 20,
+    "description": "A vibrant pink hoodie to brighten your wardrobe.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\pinkhoodie.png"
+  },
+  {
+    "id": "4",
+    "name": "MS Hoodie",
+    "price": 55.0,
+    "categoryId": "1",
+    "quantity": 15,
+    "description": "An MS hoodie with a sleek and modern design.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\mshoodie.png"
+  },
+  {
+    "id": "5",
+    "name": "Gadeet Hoodie",
+    "price": 35.0,
+    "categoryId": "1",
+    "quantity": 40,
+    "description": "A Gadeet hoodie offering comfort and style.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\gadeethoodie.png"
+  },
+  {
+    "id": "6",
+    "name": "Mahmoud T-shirt",
+    "price": 20.0,
+    "categoryId": "2",
+    "quantity": 50,
+    "description": "A versatile T-shirt inspired by Mahmoud's signature style.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\mahmoudshirt.png"
+  },
+  {
+    "id": "7",
+    "name": "T-shirt T-shirt",
+    "price": 22.0,
+    "categoryId": "2",
+    "quantity": 45,
+    "description": "A classic and comfortable T-shirt for everyday wear.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\tshirtshirt.png"
+  },
+  {
+    "id": "8",
+    "name": "Bantalon T-shirt",
+    "price": 25.0,
+    "categoryId": "2",
+    "quantity": 40,
+    "description": "A unique T-shirt named after Bantalon.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\bantalonshirt.png"
+  },
+  {
+    "id": "9",
+    "name": "Orange T-shirt",
+    "price": 28.0,
+    "categoryId": "2",
+    "quantity": 35,
+    "description": "A bright orange T-shirt for a bold statement.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\orangeshirt.png"
+  },
+  {
+    "id": "10",
+    "name": "Green T-shirt",
+    "price": 15.0,
+    "categoryId": "2",
+    "quantity": 60,
+    "description": "A calming green T-shirt perfect for casual outings.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\greenshirt.png"
+  },
+  {
+    "id": "11",
+    "name": "Beige Trousers",
+    "price": 50.0,
+    "categoryId": "3",
+    "quantity": 30,
+    "description": "Stylish beige trousers suitable for any occasion.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\beigepants.png"
+  },
+  {
+    "id": "12",
+    "name": "Black Trousers",
+    "price": 40.0,
+    "categoryId": "3",
+    "quantity": 45,
+    "description": "Classic black trousers for a formal look.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\blackpants.png"
+  },
+  {
+    "id": "13",
+    "name": "Sweatpants",
+    "price": 35.0,
+    "categoryId": "3",
+    "quantity": 40,
+    "description": "Comfortable sweatpants for lounging or exercise.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\sweatpants.png"
+  },
+  {
+    "id": "14",
+    "name": "Light Jeans",
+    "price": 55.0,
+    "categoryId": "3",
+    "quantity": 35,
+    "description": "Trendy light jeans perfect for a casual look.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\lightjeanspants.png"
+  },
+  {
+    "id": "15",
+    "name": "Dark Jeans",
+    "price": 60.0,
+    "categoryId": "3",
+    "quantity": 20,
+    "description": "Sophisticated dark jeans suitable for multiple occasions.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\jeanspants.png"
+  },
+  {
+    "id": "16",
+    "name": "Red Shoes",
+    "price": 85.0,
+    "categoryId": "4",
+    "quantity": 25,
+    "description": "Bold red shoes that make a statement.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\redshoes.png"
+  },
+  {
+    "id": "17",
+    "name": "Black Shoes",
+    "price": 60.0,
+    "categoryId": "4",
+    "quantity": 40,
+    "description": "Classic black shoes for any occasion.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\blackshoes.png"
+  },
+  {
+    "id": "18",
+    "name": "Khaki Shoes",
+    "price": 120.0,
+    "categoryId": "4",
+    "quantity": 20,
+    "description": "Stylish khaki shoes for outdoor adventures.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\khakishoes.png"
+  },
+  {
+    "id": "19",
+    "name": "Gray Shoes",
+    "price": 45.0,
+    "categoryId": "4",
+    "quantity": 30,
+    "description": "Neutral gray shoes that pair with everything.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\grayshoes.png"
+  },
+  {
+    "id": "20",
+    "name": "Pink Shoes",
+    "price": 90.0,
+    "categoryId": "4",
+    "quantity": 15,
+    "description": "Vibrant pink shoes to add flair to your outfit.",
+    "image": "C:\\main\\Computer Engineering\\Level 3\\Advanced programming\\projects\\multithreads\\src\\main\\resources\\assets\\pinkshoes.png"
+  }
+]
