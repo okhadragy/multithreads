@@ -192,6 +192,9 @@ public class ProductPage {
             }
         }
 
+        if (selectedSort == null) {
+            selectedSort = "Price (Low to High)";
+        }
         sortProducts(filteredProducts, selectedSort);
         productGrid.getChildren().addAll(filteredProducts);
     }

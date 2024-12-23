@@ -183,8 +183,6 @@ public class CategoryPage {
         xImageView.setOnMouseClicked(event -> {
             System.out.println("Clicked on x!");
             mainApp.showProductPage("Hoodies");
-
-
         });
 
         // For yImageView
