@@ -1,7 +1,6 @@
 package gui;
 
-import java.util.Stack;
-
+import Entity.Product;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,15 +27,11 @@ public class AdminProductsPage {
         BorderPane bp = new BorderPane();
         bp.setStyle("-fx-background-color: black;");
 
-        // FOR ANY SCROLLABLE PAGE, USE THESE LINES:
         ScrollPane sp = new ScrollPane(bp);
-        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // remove horizontal bar
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         Platform.runLater(() -> sp.lookup(".viewport").setStyle("-fx-background-color: transparent;"));
-        // when the viewport loads in set its style to transparent so it doesn't affect scrollpane styling
-        sp.setFitToWidth(true); // extend the scrollpane on the entire view
-        sp.setStyle("-fx-background-color: black; -fx-border-color: transparent"); // make it black
-        
-        // nav
+        sp.setFitToWidth(true);
+        sp.setStyle("-fx-background-color: black; -fx-border-color: transparent");
 
         Image logo = new Image(getClass().getResource("/assets/multithreadsLogo.png").toExternalForm());
         ImageView logoView = new ImageView(logo);
@@ -111,13 +106,116 @@ public class AdminProductsPage {
             mainApp.showLoginPage();
         });
 
-        // content
+        TableView<Product> tableView = new TableView<>();
 
-        
+        TableColumn<Product, String> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
 
-        // bp.setCenter(tableView);
+        TableColumn<Product, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+
+        TableColumn<Product, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+
+        TableColumn<Product, String> priceColumn = new TableColumn<>("Price");
+        priceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getPrice())));
+
+        TableColumn<Product, String> categoryIdColumn = new TableColumn<>("Category ID");
+        categoryIdColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryId()));
+
+        TableColumn<Product, String> quantityColumn = new TableColumn<>("Quantity");
+        quantityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getQuantity())));
+
+        for(Product products : mainApp.getProductService().getAll()){
+            tableView.getItems().add(products);
+        }
+
+        tableView.getColumns().addAll(idColumn, nameColumn, descriptionColumn, priceColumn, categoryIdColumn, quantityColumn);
+
+        Button changePriceButton = new Button("Change Price");
+        changePriceButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        changePriceButton.setOnAction(event -> {
+            Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+            if (selectedProduct != null) {
+                openPriceChangeDialog(selectedProduct);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a product to change the price.");
+                alert.show();
+            }
+        });
+
+        Button updateQuantityButton = new Button("Update Quantity");
+        updateQuantityButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;");
+        updateQuantityButton.setOnAction(event -> {
+            Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+            if (selectedProduct != null) {
+                openQuantityChangeDialog(selectedProduct);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a product to update the quantity.");
+                alert.show();
+            }
+        });
+
+        Button deleteProductButton = new Button("Delete Product");
+        deleteProductButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        deleteProductButton.setOnAction(event -> {
+            Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+            if (selectedProduct != null) {
+                Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION, 
+                        "Are you sure you want to delete " + selectedProduct.getName() + "?",
+                        ButtonType.YES, ButtonType.NO);
+                confirmationAlert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.YES) {
+                        mainApp.getProductService().delete(selectedProduct.getId());
+                        tableView.getItems().remove(selectedProduct);
+                    }
+                });
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a product to delete.");
+                alert.show();
+            }
+        });
+
+        VBox vbox = new VBox(10);
+        vbox.getChildren().addAll(tableView, changePriceButton, updateQuantityButton, deleteProductButton);
+        bp.setCenter(vbox);
 
         return new Scene(sp, 1366, 768);
+    }
 
+    private void openPriceChangeDialog(Product product) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Change Product Price");
+        dialog.setHeaderText("Enter the new price for " + product.getName());
+        dialog.setContentText("New price:");
+
+        dialog.showAndWait().ifPresent(inputText -> {
+            try {
+                double newPrice = Double.parseDouble(inputText.trim());
+                mainApp.getProductService().update(product.getId(), "price", newPrice);
+                mainApp.showAdminProductsPage();
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid price entered for product: " + product.getName());
+                alert.show();
+            }
+        });
+    }
+
+    private void openQuantityChangeDialog(Product product) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Update Product Quantity");
+        dialog.setHeaderText("Enter the new quantity for " + product.getName());
+        dialog.setContentText("New quantity:");
+
+        dialog.showAndWait().ifPresent(inputText -> {
+            try {
+                int newQuantity = Integer.parseInt(inputText.trim());
+                mainApp.getProductService().update(product.getId(), "quantity", newQuantity);
+                mainApp.showAdminProductsPage();
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid quantity entered for product: " + product.getName());
+                alert.show();
+            }
+        });
     }
 }
