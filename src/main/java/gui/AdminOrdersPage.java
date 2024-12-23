@@ -1,7 +1,8 @@
 package gui;
 
-import Entity.Order;
-import Entity.Status;
+import java.io.ObjectInputFilter;
+
+import Entity.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
@@ -156,7 +157,9 @@ public class AdminOrdersPage {
                     Status status = statusDropdown.getValue();
                     if (selectedOrder != null && status != null) {
                         if(status.equals(Status.draft)){
+                            if(selectedOrder.getStatus().equals(Status.processing)){
                             mainApp.getOrderService().setStatus(selectedOrder.getId(),status);
+                        }
                         }
                         if(status.equals(Status.processing)){
                             mainApp.getOrderService().setStatus(selectedOrder.getId(),status);
