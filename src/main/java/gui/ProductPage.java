@@ -15,8 +15,10 @@ import javafx.scene.paint.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import Entity.Product;
+import Entity.Category;
 
 public class ProductPage {
 
@@ -113,7 +115,12 @@ public class ProductPage {
 
         // Category Filter Dropdown
         ComboBox<String> categoryComboBox = new ComboBox<>();
-        categoryComboBox.getItems().addAll("All", "Hoodies", "T-Shirts", "Trousers", "Shoes");
+        List<Category> categories = mainApp.getCategoryService().getAll();
+        List<String> categoryNames = categories.stream()
+                .map(Category::getName)
+                .collect(Collectors.toList());
+        categoryComboBox.getItems().add("All");
+        categoryComboBox.getItems().addAll(categoryNames);
 
         // Sort By Dropdown
         ComboBox<String> sortByComboBox = new ComboBox<>();
@@ -260,7 +267,8 @@ public class ProductPage {
 
         showProductButton.setStyle("-fx-background-color: #006fff; -fx-text-fill: white; -fx-border-radius: 10px; -fx-padding: 10px; -fx-font-size: 14px;");
 
-        String categoryName = CATEGORY_MAP.getOrDefault(product.getCategoryId(), "Unknown");
+        Category productCategory = mainApp.getCategoryService().get(product.getCategoryId());
+        String categoryName = productCategory != null ? productCategory.getName() : "Unknown";
         Label categoryLabel = new Label(categoryName);
         categoryLabel.setVisible(false);
 
@@ -270,11 +278,4 @@ public class ProductPage {
 
         return productBox;
     }
-
-    private static final Map<String, String> CATEGORY_MAP = Map.of(
-            "1", "Hoodies",
-            "2", "T-Shirts",
-            "3", "Trousers",
-            "4", "Shoes"
-    );
 }

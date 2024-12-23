@@ -9,18 +9,17 @@ public class Product implements Entity, Comparable<Product> {
     private String categoryId;
     private int quantity;
 
-    public Product(String id, String name, String desc, String image, double price, String categoryId) {
+    public Product(String id, String name, String desc, String image, double price, String categoryId, int quantity) {
         setId(id);
         setName(name);
         setDescription(desc);
         setPrice(price);
         setCategoryId(categoryId);
-        setQuantity(1);
+        setQuantity(quantity);
     }
 
-    public Product(String id, String name, String desc, String image, double price, String categoryId, int quantity) {
-        this(id, name, desc, image, price, categoryId);
-        setQuantity(quantity);
+    public Product(String id, String name, String desc, String image, double price, String categoryId) {
+        this(id, name, desc, image, price, categoryId,1);
     }
 
     public Product(Product product){

@@ -1,1 +1,74 @@
-[{"id":"1","name":"hoodies","description":"jjoj","products":[]}]
+[
+    {
+      "id": "1",
+      "name": "Hoodies",
+      "description": "Cozy and warm garments perfect for chilly days.",
+      "products": [
+        "4",
+        "17",
+        "33",
+        "39",
+        "45",
+        "49"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "T-Shirts",
+      "description": "Casual and versatile upper-body garments.",
+      "products": [
+        "1",
+        "7",
+        "10",
+        "15",
+        "20",
+        "25",
+        "29",
+        "35",
+        "42",
+        "47"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Pants and Outerwear",
+      "description": "Stylish and functional bottom wear and outerwear.",
+      "products": [
+        "5",
+        "9",
+        "13",
+        "16",
+        "22",
+        "24",
+        "28",
+        "32",
+        "34",
+        "37",
+        "38",
+        "43",
+        "44",
+        "50"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Footwear",
+      "description": "Stylish and comfortable shoes for various occasions.",
+      "products": [
+        "2",
+        "6",
+        "8",
+        "11",
+        "14",
+        "18",
+        "21",
+        "23",
+        "27",
+        "30",
+        "36",
+        "41",
+        "46"
+      ]
+    }
+  ]
+  
